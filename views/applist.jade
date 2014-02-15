@@ -1,0 +1,97 @@
+//
+   Created with JetBrains WebStorm.
+   User: yujilong
+   Date: 14-2-4
+   Time: 上午10:16
+   To change this template use File | Settings | File Templates.
+html
+    head
+        meta(charset='utf-8')
+        meta(name="viewport",content="width=device-width, initial-scale=1.0")
+        title 应用选择页面
+        link(href='/plugs/bootstrap-3.0.3/bootstrap.min.css',rel='stylesheet')
+        link(href='/plugs/bootstrap-3.0.3/bootstrap-theme.min.css',rel='stylesheet')
+        script(type='text/javascript',src='/javascripts/require.js',data-main='/applist')
+        include requireConfig
+    body
+        include nav
+        div.container
+            div.applistOperating
+                button.btn.btn-sm.btn-primary(data-target='#createBox',data-toggle='modal') create app
+            div.applist
+                table.table.table-hover
+                    thead
+                        tr
+                            th #
+                            th APP NAME
+                            th APP ID
+                            th APP VIEW NAME
+                            th APP DESC
+                            th Operating
+                    tbody
+                        each app,index in list
+                            tr
+                                td= index
+                                td
+                                   a(href="/burning/cms/getCategorylist/#{app._id}")= app.appName
+                                td= app._id
+                                td= app.appViewName
+                                td= app.appDesc
+                                td
+                                    button.btn.btn-warning.btn-sm.app-del(data-appid='#{app._id}') delete
+                                    button.btn.btn-sm.app-update.btn-primary(data-target='#updateBox',data-toggle='modal',data-appid='#{app._id}') update
+
+        //
+            增加box
+        div#createBox.modal.createBox.fade(role="dialog",aria-hidden='true',aria-labelledby="myModalLabel")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button.close(data-dismiss="modal",aria-hidden="true") &times;
+                        h4.modal-title Create Apps
+                    div.modal-body
+                        form(role="form")
+                            div.form-group
+                                label(for="appName") App Name
+                                input(type="text",class="form-control",name="appName",placeholder="Enter app name")
+                            div.form-group
+                                label(for="appViewName") App View Name
+                                input(type="text",class="form-control",name="appViewName",placeholder="Enter app view name")
+                            div.form-group
+                                label(for="appDesc") App Desc
+                                input(type="text",class="form-control",name="appDesc",placeholder="Enter app desc")
+                    div.modal-footer
+                        button.btn-primary.btn.btn-sm.submit 确定
+                        button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消
+        //
+            修改box
+        div#updateBox.modal.createBox.fade(role="dialog",aria-hidden='true',aria-labelledby="myModalLabel")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button.close(data-dismiss="modal",aria-hidden="true") &times;
+                        h4.modal-title Update Apps
+                    div.modal-body
+                        form(role="form")
+                            div.form-group
+                                label(for="appId") App Id
+                                input.form-control(type='text',name="_id",disabled)
+                            div.form-group
+                                label(for="appName") App Name
+                                input(type="text",class="form-control",name="appName",placeholder="Enter app name")
+                            div.form-group
+                                label(for="appViewName") App View Name
+                                input(type="text",class="form-control",name="appViewName",placeholder="Enter app view name")
+                            div.form-group
+                                label(for="appDesc") App Desc
+                                input(type="text",class="form-control",name="appDesc",placeholder="Enter app desc")
+                    div.modal-footer
+                        button.btn-primary.btn.btn-sm.submit 确定
+                        button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消
+
+
+
+
+
+
+

@@ -1,0 +1,23 @@
+//
+   Created with JetBrains WebStorm.
+   User: yujilong
+   Date: 14-2-4
+   Time: 下午12:08
+   To change this template use File | Settings | File Templates.
+
+script(type='text/javascript').
+    require.config({
+         baseUrl:'/javascripts',
+         paths:{
+              jquery:'jquery-1.11.0.min',
+              bootstrap:'../plugs/bootstrap-3.0.3/bootstrap.min',
+              domReady:'domReady'
+         },
+         shim:{
+              bootstrap:{
+                  deps:['jquery'],
+                  exports:'$.fn.popover'
+              }
+         },
+         enforceDefine:true
+    });

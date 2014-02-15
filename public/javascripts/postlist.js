@@ -1,0 +1,198 @@
+/**
+ * Created with JetBrains WebStorm.
+ * User: NBE01
+ * Date: 14-2-10
+ * Time: 下午8:23
+ * To change this template use File | Settings | File Templates.
+ */
+define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler', 'bootstrap'], function (doc, $, util, Post, uploader, pageHandler) {
+
+    $('form').on('submit', function () {
+        return false;
+    });
+    pageHandler.init(
+        $('#postPage').data('url'),
+        $('#postPage').data('page-num'),
+        $('#postPage').data('count'),
+        'postPage'
+    );
+
+    var viewHandler = {
+        init : function(){
+            this.initDelPostHandler();
+        },
+        initDelPostHandler : function (){
+            $('.del-post-btn').click(function(e){
+                var post = new Post($(this).data('post-id'));
+                post.delByPostId(function(data){
+                    if(data.rs == 1){
+                        util.showMsg(data.msg);
+                        setTimeout(function(){
+                            location.reload(true);
+                        },2000);
+                    }else{
+                        util.showMsg(data.msg);
+                    }
+                });
+            });
+        }
+    };
+    viewHandler.init();
+
+    var createFormHandler = {
+        post: null,
+        init: function () {
+            this.post = new Post(
+                null,
+                $('#createBox').data('app-id'),
+                $('#createBox').data('category-id'),
+                $('#createBox').data('board-id')
+            );
+            this.addEventFooter();
+            this.contentEventHandler();
+        },
+        contentEventHandler : function() {
+            var tThis = this;
+            $('#createBox').delegate('input[type="file"]','change',function(e){
+                var file = e.target.files[0];
+                if(!file){
+                    return;
+                }
+                if (!/^image$/.test(file.type.substring(0,file.type.indexOf('/')).trim())) {
+                    alert('请上传图片类型的文件');
+                    return false;
+                }
+                if (file.size > 1024 * 1024 * 3) {
+                    alert('单张图片，限定为3M以下!');
+                    return false;
+                }
+                if (e.target.files[0]) {
+                    if(!uploader.browserSuport){
+                        return false;
+                    }
+                    var $parent = $(e.target).parent();
+                    uploader.init('/burning/cms/uploader', e.target, function (xhr) {
+                        var data = xhr.currentTarget.response;
+                        if(!data.rs){
+                            data = eval('(' + data + ')');
+                        }
+                        if (data.rs == 1) {
+                            if (data.cover) {
+                                //gif
+                                tThis.post.updateContent(
+                                    $(e.target).data('id'),
+                                    {
+                                        path:data.path,
+                                        cover:data.cover
+                                    },
+                                    3
+                                );
+                                tThis.showPic($parent,data.cover);
+                            } else {
+                                //jpg
+                                tThis.post.updateContent(
+                                    $(e.target).data('id'),
+                                    {
+                                        path:data.path
+                                    },
+                                    2
+                                );
+                                tThis.showPic($parent,data.path);
+                            }
+                        }
+                    });
+                    uploader.send();
+                }
+
+            });
+            $('#createBox').delegate('.delbtn','click',function(e){
+                var _id = $(e.target).data('id');
+                $('#' + _id).empty().remove();
+                tThis.post.pullContents(_id);
+            });
+        },
+        addEventFooter: function () {
+            var tThis = this;
+            $('#createBox').find('.add-text').click(function (e) {
+
+                tThis.post.createContentKey(function(data){
+                    if(data.rs == 1){
+                        var textArea = tThis.post.createContent(data.key);
+                        tThis.post.initDefaultText(textArea);
+                        $("#createBox").find('.contents').append(tThis.appendTextPanel(data.key));
+                    }
+                });
+            });
+            $('#createBox').find('.add-pic').click(function (e) {
+
+                tThis.post.createContentKey(function(data){
+                    if(data.rs == 1){
+                        tThis.post.createContent(data.key);
+                        $("#createBox").find('.contents').append(tThis.appendImgPanel(data.key));
+                    }
+                });
+
+            });
+            $('#createBox').find('.submit').click(function (e) {
+                var obj = tThis.post.submit();
+                if(obj){
+                    $("#createBox").find('.contents').append(tThis.appendErrorInfo(obj.error));
+                }
+
+            });
+        },
+        appendTextPanel: function (textId) {
+            var textPanel = [
+                '<div id="',textId,'" class="form-group panel panel-default">',
+                    '<div class="panel-heading">段落',
+                    '</div>',
+                    '<div class="panel-body">',
+                        '<textarea class="form-control" rows="10" placeholder="Enter text"></textarea>',
+                    '</div>',
+                    '<div class="panel-footer text-center">',
+                        '<button data-id="',textId,'" class="btn btn-warning btn-sm delbtn">删除本段文本</button>',
+                    '</div>',
+                '</div>'
+            ].join('');
+            return textPanel;
+        },
+        appendImgPanel : function(imgId){
+            var imgPanel = [
+                '<div id="',imgId,'" class="form-group panel panel-default">',
+                    '<div class="panel-heading">上传图片</div>',
+                    '<div class="panel-body">',
+                        '<input data-id="',imgId,'" type="file">',
+                    '</div>',
+                    '<div class="panel-footer text-center">',
+                        '<button data-id="',imgId,'" class="btn btn-warning btn-sm delbtn">删除本段图片</button>',
+                    '</div>',
+                '</div>'
+            ].join('');
+            return imgPanel;
+        },
+        appendErrorInfo : function(msg){
+            var errAlert = [
+                '<div class="alert alert-warning alert-dismissable">',
+                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">',"&times;",'</button>',
+                    '<strong>',msg,'</strong>',
+                '</div>'
+            ].join('');
+            return errAlert;
+        },
+        showPic : function($div,path){
+            if($div.find('img')[0]){
+                $div.find('img').attr('src',path);
+            }else{
+                $div.append([
+                    '<img width="500" src = ',
+                    path,
+                    '>'
+                ].join(''));
+            }
+        }
+    };
+
+    createFormHandler.init();
+
+
+});

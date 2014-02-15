@@ -1,0 +1,96 @@
+//
+   Created with JetBrains WebStorm.
+   User: NBE01
+   Date: 14-2-10
+   Time: 下午8:14
+   To change this template use File | Settings | File Templates.
+html
+    head
+        meta(charset='utf-8')
+        meta(name="viewport",content="width=device-width, initial-scale=1.0")
+        title 发帖管理
+        link(href='/stylesheets/common.css',rel='stylesheet')
+        link(href='/stylesheets/postlist.css',rel='stylesheet')
+        link(href='/plugs/bootstrap-3.0.3/bootstrap.min.css',rel='stylesheet')
+        link(href='/plugs/bootstrap-3.0.3/bootstrap-theme.min.css',rel='stylesheet')
+        script(type='text/javascript',src='/javascripts/require.js',data-main='/postlist')
+        include requireConfig
+    body
+        include nav
+        div.container
+            ol.breadcrumb
+                li
+                    a(href='/burning/cms/applist') #{app.appName}
+                li
+                    a(href='/burning/cms/getCategorylist/#{app._id}') #{category.categoryName}
+                li
+                    a(href='/burning/cms/getAllBoards/#{app._id}/#{category._id}') #{board.boardName}
+                li.active
+                    |帖子列表
+
+
+
+        div.container
+            div.page-header
+                h1 帖子列表
+        div.container.text-right.operating
+            a.btn-primary.btn.btn-sm(data-target='#createBox',data-toggle='modal') 创建帖子
+        div.container
+            div#accordion.panel-group
+
+                each post in posts
+
+                    div.panel.panel-default
+                        div.panel-heading
+                            h4.panel-title
+                                a(data-toggle='collapse',data-parent='#accordion',href="##{post._id}panel") #{post.title}
+                        div.collapse(id="#{post._id}panel")
+                            div.panel-body
+                                if post.urlPromotion
+                                    a(target="_blank",href="#{post.urlPromotion}").btn.btn-sm.btn-primary 点击跳转到推广商品展示页面
+                                    br
+                                each content in post.postContents
+                                    if (content.type == 1)
+                                        p.postText &nbsp;&nbsp;#{content.info.text}
+                                    if (content.type == 2)
+                                        img.postImg(width='500',src='#{content.info.path}')
+                                        br
+                                    if(content.type == 3)
+                                        img.postImg(width='500',src='#{content.info.cover}')
+                                        br
+                            div.panel-footer.text-right
+                                button.btn.btn-sm.btn-warning.del-post-btn(data-post-id='#{post._id}') 删除
+        div.container.text-right
+            ul#postPage.pagination(data-count="#{posts.pageCount}",data-page-num="#{pageNum}",data-url="/burning/cms/getPostlist/#{app._id}/#{category._id}/#{board._id}/$")
+
+
+
+
+
+
+        div#createBox.fade.modal(role='dialog',aria-hidden='true',aria-labelledby="myModalLabel",data-app-id="#{app._id}",data-category-id="#{category._id}",data-board-id="#{board._id}")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button.close(data-dismiss="modal",aria-hidden="true") &times;
+                        h4.modal-title Create Post
+                    div.modal-body
+                        form(role="form")
+                            div.form-group
+                                label(for="postTitle") 帖子标题
+                                input(type="text",class="form-control",name="postTitle",placeholder="Enter post title")
+                            div.form-group
+                                label(for="urlPromotion") 推广商品连接
+                                input.form-control(type="text",name="urlPromotion",placeholder="Enter url")
+                            div.contents
+                                label 内容
+
+                    div.modal-footer
+                        button.btn.btn-primary.btn-sm.add-text 添加文本
+                        button.btn.btn-primary.btn-sm.add-pic 添加图片
+                        button.btn-primary.btn.btn-sm.submit 确定
+                        button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消
+
+
+
+

@@ -1,0 +1,79 @@
+//
+   Created with JetBrains WebStorm.
+   User: yujilong
+   Date: 14-2-7
+   Time: 下午5:53
+   To change this template use File | Settings | File Templates.
+html
+    head
+        meta(charset='utf-8')
+        meta(name="viewport",content="width=device-width, initial-scale=1.0")
+        title baords管理页面
+        link(href='/stylesheets/common.css',rel='stylesheet')
+        link(href='/stylesheets/categorylist.css',rel='stylesheet')
+        link(href='/plugs/bootstrap-3.0.3/bootstrap.min.css',rel='stylesheet')
+        link(href='/plugs/bootstrap-3.0.3/bootstrap-theme.min.css',rel='stylesheet')
+        script(type='text/javascript',src='/javascripts/require.js',data-main='/boardlist')
+        include requireConfig
+    body
+        include nav
+        div.container
+            ol.breadcrumb
+                li
+                    a(href='/burning/cms/applist') #{appName}
+                li
+                    a(href='/burning/cms/getCategorylist/#{appId}') #{categoryName}
+                li.active
+                    |Board Management
+        div.container.operating
+            button.btn.btn-primary.btn-sm(data-toggle='modal',data-target='#createBox') Create Board
+        div.container
+            div.row
+                each b in boards
+                    div.col-md-4.col-sm-6
+                        div.thumbnail
+                            img
+                            div.caption
+                                h3
+                                    a(href="/burning/cms/getPostList/#{appId}/#{categoryId}/#{b._id}/1")= b.boardName
+                                div.center-block.text-center
+                                    a.btn.btn-primary.btn-sm.board-update(data-target='#updateBox',data-toggle='modal',data-board-id='#{b._id}',data-app-id='#{appId}',data-category-id='#{categoryId}',data-board-name='#{b.boardName}') 编辑
+                                    a.btn.btn-warning.btn-sm.board-del(data-board-id='#{b._id}',data-app-id='#{appId}',data-category-id='#{categoryId}') 删除
+
+
+
+        //
+               增加box
+        div#createBox.modal.createBox.fade(role="dialog",aria-hidden='true',aria-labelledby="myModalLabel")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button.close(data-dismiss="modal",aria-hidden="true") &times;
+                        h4.modal-title Create Board
+                    div.modal-body
+                        form(role="form")
+                            div.form-group
+                                label(for="boardName") Board Name
+                                input(type="text",class="form-control",name="boardName",placeholder="Enter baord name")
+                            div.modal-footer
+                                button.btn-primary.btn.btn-sm.submit(data-app-id='#{appId}',data-category-id='#{categoryId}') 确定
+                                button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消
+        //
+            修改box
+        div#updateBox.modal.createBox.fade(role="dialog",aria-hidden='true',aria-labelledby="myModalLabel")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button.close(data-dismiss="modal",aria-hidden="true") &times;
+                        h4.modal-title Update Board
+                    div.modal-body
+                        form(role="form")
+                            div.form-group
+                                label(for="categoryName") Board Name
+                                input(type="text",class="form-control",name="boardName",placeholder="Enter category name")
+                                input.hidden(type='text',data-val='#{appId}',name='appId')
+                                input.hide(type='text',name='categoryId')
+                                input.hide(type='text',name='boardId')
+                    div.modal-footer
+                        button.btn-primary.btn.btn-sm.submit 确定
+                        button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消

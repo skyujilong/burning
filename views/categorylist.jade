@@ -1,0 +1,77 @@
+//
+   Created with JetBrains WebStorm.
+   User: yujilong
+   Date: 14-2-6
+   Time: 上午10:01
+   To change this template use File | Settings | File Templates.
+html
+    head
+        meta(charset='utf-8')
+        meta(name="viewport",content="width=device-width, initial-scale=1.0")
+        title category管理页面
+        link(href='/stylesheets/common.css',rel='stylesheet')
+        link(href='/stylesheets/categorylist.css',rel='stylesheet')
+        link(href='/plugs/bootstrap-3.0.3/bootstrap.min.css',rel='stylesheet')
+        link(href='/plugs/bootstrap-3.0.3/bootstrap-theme.min.css',rel='stylesheet')
+        script(type='text/javascript',src='/javascripts/require.js',data-main='/categorylist')
+        include requireConfig
+    body
+        include nav
+        div.container
+            ol.breadcrumb
+                li
+                    a(href='/burning/cms/applist') #{appName}
+                li.active
+                    |Category Manage
+        div.container.operating
+            button.btn.btn-primary.btn-sm(data-toggle='modal',data-target='#createBox') Create Category
+        div.container
+            div.row
+                each cate,index in categorys
+                    div.col-md-4.col-sm-6
+                        div.thumbnail
+                            img
+                            div.caption
+                                h3
+                                    a(href="/burning/cms/getAllBoards/#{appId}/#{cate._id}")= cate.categoryName
+                                div.center-block.text-center
+                                    a.btn.btn-primary.btn-sm.cate-update(data-target='#updateBox',data-toggle='modal',data-category-id='#{cate._id}',data-category-name='#{cate.categoryName}') 编辑
+                                    a.btn.btn-warning.btn-sm.cate-del(data-category-id='#{cate._id}',data-app-id='#{appId}') 删除
+
+
+
+        //
+            增加box
+        div#createBox.modal.createBox.fade(role="dialog",aria-hidden='true',aria-labelledby="myModalLabel")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button.close(data-dismiss="modal",aria-hidden="true") &times;
+                        h4.modal-title Create Category
+                    div.modal-body
+                        form(role="form")
+                            div.form-group
+                                label(for="categoryName") Category Name
+                                input(type="text",class="form-control",name="categoryName",placeholder="Enter category name")
+                                input.hidden(type='text',data-val='#{appId}',name='appId')
+                    div.modal-footer
+                        button.btn-primary.btn.btn-sm.submit 确定
+                        button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消
+        //
+            修改box
+        div#updateBox.modal.createBox.fade(role="dialog",aria-hidden='true',aria-labelledby="myModalLabel")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button.close(data-dismiss="modal",aria-hidden="true") &times;
+                        h4.modal-title Update Category
+                    div.modal-body
+                        form(role="form")
+                            div.form-group
+                                label(for="categoryName") Category Name
+                                input(type="text",class="form-control",name="categoryName",placeholder="Enter category name")
+                                input.hidden(type='text',data-val='#{appId}',name='appId')
+                                input.hide(type='text',name='categoryId')
+                    div.modal-footer
+                        button.btn-primary.btn.btn-sm.submit 确定
+                        button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消
