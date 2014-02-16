@@ -1,0 +1,17 @@
+{
+    "name": "webapp",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "start": "node sdk.js"
+    },
+    "dependencies": {
+        "express": "3.4.8",
+        "jade": "*",
+        "log4js": "0.6.x",
+        "mongodb": "*",
+        "gm": "1.*",
+        "connect-mongo":"*",
+        "connect-flash":"*"
+    }
+}
