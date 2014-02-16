@@ -21,7 +21,7 @@ module.exports = function (app) {
         var pageNum = req.param('pageNum');
         var pageSize = req.param('pageSize') || 10;
         if (!util.valiNum(pageNum)) {
-            res.json(200, {rs: 0, msg: 'error param'});
+            res.json(200, {status: 0, msg: 'error param'});
             return;
         }
         postService.getPostList(appId, categoryId, boardId, pageNum, pageSize, function (err, docs) {

@@ -18,6 +18,8 @@ var DBUtil = require('./../common/dbUtil').dbUtil;
  * @param createTime 创建时间戳
  * @param urlPromotion 推广url
  * @param lastUpdateTime 最后更新时间
+ * @param fontCoverPic 列表封面地址
+ * @param innerMainPic 帖子显示的大图地址
  * @constructor
  */
 var Post = function(_id,appId,categoryId,boardId,title,postContents,createTime,urlPromotion,lastUpdateTime,fontCoverPic,innerMainPic){
