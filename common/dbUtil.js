@@ -10,8 +10,8 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var logger = require('./log').getLogger('cheese');
 //下个版本进行修改
-//var dbConfig = require('../db').db;
-var dbConfig = require('../db').online;
+var dbConfig = require('../db').db;
+//var dbConfig = require('../db').online;
 var connectUrl = "mongodb://" + dbConfig.username + ":" + dbConfig.pwd + "@" + dbConfig.connectUrl + "/" + dbConfig.dbName;
 var DBConnecter = {
     /**
