@@ -30,6 +30,7 @@ app.configure(function () {
 // development only
 app.configure('development', function () {
     app.set('delimiter','\\');
+    app.set('ctx','http://127.0.0.1:3000');
     app.use(express.session({
         secret: 'burning',
         cookie: {maxAge: 1000 * 60 * 60},
@@ -50,6 +51,7 @@ app.configure('development', function () {
 });
 app.configure('production', function(){
     app.set('delimiter','/');
+    app.set('ctx','http://115.28.225.107:3000');
     app.use(express.session({
         secret: 'burning',
         cookie: {maxAge: 1000 * 60 * 60 * 4},

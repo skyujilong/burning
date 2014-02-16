@@ -32,10 +32,14 @@ html
                 each b in boards
                     div.col-md-4.col-sm-6
                         div.thumbnail
-                            img
+
+                            //
+                                img
                             div.caption
                                 h3
+                                    |板块名称：
                                     a(href="/burning/cms/getPostList/#{appId}/#{categoryId}/#{b._id}/1")= b.boardName
+                                span ID：#{b._id}
                                 div.center-block.text-center
                                     a.btn.btn-primary.btn-sm.board-update(data-target='#updateBox',data-toggle='modal',data-board-id='#{b._id}',data-app-id='#{appId}',data-category-id='#{categoryId}',data-board-name='#{b.boardName}') 编辑
                                     a.btn.btn-warning.btn-sm.board-del(data-board-id='#{b._id}',data-app-id='#{appId}',data-category-id='#{categoryId}') 删除

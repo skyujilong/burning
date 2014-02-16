@@ -22,7 +22,7 @@ var DBUtil = require('./../common/dbUtil').dbUtil;
  * @param innerMainPic 帖子显示的大图地址
  * @constructor
  */
-var Post = function(_id,appId,categoryId,boardId,title,postContents,createTime,urlPromotion,lastUpdateTime,fontCoverPic,innerMainPic){
+var Post = function(_id,appId,categoryId,boardId,title,postContents,createTime,urlPromotion,lastUpdateTime,fontCoverPic){
     this._id = _id || DBUtil.getNewId();
     this.appId = appId;
     this.categoryId = categoryId;
@@ -33,7 +33,6 @@ var Post = function(_id,appId,categoryId,boardId,title,postContents,createTime,u
     this.urlPromotion = urlPromotion;
     this.lastUpdateTime = lastUpdateTime || this.createTime;
     this.fontCoverPic = fontCoverPic;
-    this.innerMainPic = innerMainPic;
 };
 
 

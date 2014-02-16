@@ -30,10 +30,15 @@ html
                 each cate,index in categorys
                     div.col-md-4.col-sm-6
                         div.thumbnail
-                            img
+                            //
+                                img
                             div.caption
                                 h3
+                                    |分类名字：
                                     a(href="/burning/cms/getAllBoards/#{appId}/#{cate._id}")= cate.categoryName
+                                span
+                                    |ID：
+                                    |#{cate._id}
                                 div.center-block.text-center
                                     a.btn.btn-primary.btn-sm.cate-update(data-target='#updateBox',data-toggle='modal',data-category-id='#{cate._id}',data-category-name='#{cate.categoryName}') 编辑
                                     a.btn.btn-warning.btn-sm.cate-del(data-category-id='#{cate._id}',data-app-id='#{appId}') 删除

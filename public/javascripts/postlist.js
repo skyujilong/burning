@@ -83,7 +83,8 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                                     $(e.target).data('id'),
                                     {
                                         path:data.path,
-                                        cover:data.cover
+                                        cover:data.cover,
+                                        lowPath:data.lowViewPath
                                     },
                                     3
                                 );
@@ -93,7 +94,8 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                                 tThis.post.updateContent(
                                     $(e.target).data('id'),
                                     {
-                                        path:data.path
+                                        path:data.path,
+                                        lowPath:data.lowViewPath
                                     },
                                     2
                                 );

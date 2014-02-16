@@ -64,16 +64,13 @@ module.exports = function (app) {
 
     app.post('/burning/cms/createPost',loginFilter,function(req,res){
         var _post = req.param('post');
-        var post = new Post(dbUtil.getObjectId(dbUtil.getNewId()),dbUtil.getObjectId(_post.appId),dbUtil.getObjectId(_post.categoryId),dbUtil.getObjectId(_post.boardId),_post.title,null,null,_post.urlPromotion,null,null,null);
+        var post = new Post(dbUtil.getObjectId(dbUtil.getNewId()),dbUtil.getObjectId(_post.appId),dbUtil.getObjectId(_post.categoryId),dbUtil.getObjectId(_post.boardId),_post.title,null,null,_post.urlPromotion,null,null);
         for(var i = 0, len=_post.postContents.length ; i < len ; i++){
             var _content = _post.postContents[i];
             var postContent = new PostContent(dbUtil.getObjectId(_content._id),_content.info,_content.type,i);
-            if(postContent.type == 2 && !post.fontCoverPic){
-                post.fontCoverPic = postContent.info.path;
-                post.innerMainPic = postContent.info.path;
-            }else if(postContent.type == 3 && !post.fontCoverPic){
-                post.fontCoverPic = postContent.info.cover;
-                post.innerMainPic = postContent.info.path;
+            if(postContent.type != 1){
+                post.fontCoverPic = postContent.info.lowPath;
+//                post.innerMainPic = postContent.info.path;
             }
             post.postContents.push(postContent);
         }

@@ -19,7 +19,7 @@ module.exports = function (app) {
         var categoryId = req.param('categoryId');
         var boardId = req.param('boardId');
         var pageNum = req.param('pageNum');
-        var pageSize = req.param('pageSize') || 10;
+        var pageSize = req.param('pageSize') - 0 || 10;
         if (!util.valiNum(pageNum)) {
             res.json(200, {status: 0, msg: 'error param'});
             return;

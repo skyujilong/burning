@@ -14,7 +14,8 @@ module.exports = function (app) {
     var resize_width = 500,
         resize_height = 500,
         fontSize = 25,
-        delimiter = app.get('delimiter');
+        delimiter = app.get('delimiter'),
+        ctx = app.get('ctx');
 
 
     app.post('/burning/cms/uploader', loginFilter, function (req, res) {
@@ -29,12 +30,12 @@ module.exports = function (app) {
                     res.json(200, {rs: 0});
 
                 } else {
-                    saveImg(_file, point, function (err, viewPath) {
+                    saveImg(_file, point, function (err, viewPath, viewLowPath) {
                         if (err) {
                             logger.error(err);
                             res.json(200, {rs: 0});
                         } else {
-                            res.json(200, {rs: 1, path: viewPath});
+                            res.json(200, {rs: 1, path: viewPath, lowViewPath : viewLowPath});
                         }
                     });
                 }
@@ -48,12 +49,12 @@ module.exports = function (app) {
                     logger.error(err);
                     res.json(200, {rs: 0});
                 } else {
-                    saveGif(_file, point, function (err, viewCoverPath, viewGifPath) {
+                    saveGif(_file, point, function (err, viewCoverPath, viewGifPath, viewLowPath) {
                         if (err) {
                             logger.error(err);
                             res.json(200, {rs: 0});
                         } else {
-                            res.json(200, {rs: 1, cover: viewCoverPath, path: viewGifPath});
+                            res.json(200, {rs: 1, cover: viewCoverPath, path: viewGifPath, lowViewPath : viewLowPath});
                         }
                     });
                 }
@@ -68,32 +69,47 @@ module.exports = function (app) {
     });
     function saveImg(_file, point, fn) {
         var fileType = _file.type.substring(_file.type.lastIndexOf('/') + 1, _file.type.length);
-        createImgName(fileType, function (savePath, viewPath) {
-            gm(_file.path).quality(75).resize(resize_width, resize_height)
-//                .font(sdk.locals.appLocal + "\\font\\Helvetica.ttf", fontSize)
-//                .drawText(point.x, point.y, 'burning')
-                .write(savePath, function (err) {
-                    fn(err, viewPath);
+        createImgName(fileType, function (savePath, viewPath, saveLowPath, viewLowPath) {
+            gm(_file.path).quality(50).resize(resize_width, resize_height).write(saveLowPath,function(err){
+                if(err){
+                    fn(err);
                     delFile(_file.path);
-                });
+                    return;
+                }
+                gm(_file.path).quality(75).resize(resize_width, resize_height)
+//                  .font(sdk.locals.appLocal + "\\font\\Helvetica.ttf", fontSize)
+//                  .drawText(point.x, point.y, 'burning')
+                    .write(savePath, function (err) {
+                        fn(err, viewPath, viewLowPath);
+                        delFile(_file.path);
+                    });
+            });
         });
     }
 
     function saveGif(_file, point, fn) {
         var fileType = _file.type.substring(_file.type.lastIndexOf('/') + 1, _file.type.length);
-        createGifName(fileType, function (saveCoverPngPath, saveGifPath, viewCoverPath, viewGifPath) {
+        createGifName(fileType, function (saveCoverPngPath, saveGifPath, viewCoverPath, viewGifPath,  saveLowPath, viewLowPath) {
             gm(_file.path).quality(75).write(saveGifPath, function (err) {
                 if (err) {
                     fn(err);
+                    delFile(_file.path);
                     return;
                 }
-                gm(_file.path + '[0]')
-//                    .font(sdk.locals.appLocal + "\\font\\Helvetica.ttf", fontSize)
-//                    .drawText(point.x,point.y,'play gif')
-                    .write(saveCoverPngPath, function (err) {
-                        fn(err, viewCoverPath, viewGifPath);
+                gm(_file.path + '[0]').quality(50).resize(resize_width, resize_height).write(saveLowPath,function(err){
+                    if (err) {
+                        fn(err);
                         delFile(_file.path);
-                    });
+                        return;
+                    }
+                    gm(_file.path + '[0]').quality(75).resize(resize_width, resize_height)
+//                       .font(sdk.locals.appLocal + "\\font\\Helvetica.ttf", fontSize)
+//                       .drawText(point.x,point.y,'play gif')
+                        .write(saveCoverPngPath, function (err) {
+                            fn(err, viewCoverPath, viewGifPath, viewLowPath);
+                            delFile(_file.path);
+                        });
+                });
             })
         });
     }
@@ -104,13 +120,16 @@ module.exports = function (app) {
             'images' + delimiter + 'posts' + delimiter + gifName + '.png';
         var saveGifPath = app.locals.appLocal + delimiter +
             'public' + delimiter + 'images' + delimiter + 'posts' + delimiter + gifName + '.' + type;
-        var viewCoverPath = '/images/posts/' + gifName + '.png';
-        var viewGifPath = '/images/posts/' + gifName + '.' + type;
+        var saveLowPath = app.locals.appLocal + delimiter + 'public' + delimiter +
+            'images' + delimiter + 'posts' + delimiter + gifName + 'low.png';
+        var viewCoverPath = ctx + '/images/posts/' + gifName + '.png';
+        var viewGifPath = ctx + '/images/posts/' + gifName + '.' + type;
+        var viewLowPath = ctx + '/images/posts/' + gifName + 'low.png';
         fs.exists(saveCoverPngPath, function (exists) {
             if (exists) {
                 createGifName(type, fn);
             } else {
-                fn(saveCoverPngPath, saveGifPath, viewCoverPath, viewGifPath);
+                fn(saveCoverPngPath, saveGifPath, viewCoverPath, viewGifPath, saveLowPath, viewLowPath);
             }
         })
     }
@@ -131,12 +150,15 @@ module.exports = function (app) {
         var imgName = createUniqueName();
         var savePath = app.locals.appLocal + delimiter +
             'public' + delimiter + 'images' + delimiter + 'posts' + delimiter + imgName + '.' + type;
-        var viewPath = '/images/posts/' + imgName + '.' + type;
+        var saveLowPath = app.locals.appLocal + delimiter +
+            'public' + delimiter + 'images' + delimiter + 'posts' + delimiter + imgName + 'low.' + type;
+        var viewPath = ctx +'/images/posts/' + imgName + '.' + type;
+        var viewLowPath = ctx +'/images/posts/' + imgName + 'low.' + type;
         fs.exists(savePath, function (exists) {
             if (exists) {
                 createImgName(type, fn);
             } else {
-                fn(savePath, viewPath);
+                fn(savePath, viewPath, saveLowPath, viewLowPath);
             }
         });
     }
