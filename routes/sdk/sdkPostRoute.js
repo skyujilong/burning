@@ -13,13 +13,13 @@ var postService = require('./../../service/PostService').service;
 module.exports = function (app) {
 
 
-    app.get('/burning/sdk/getPostList/:appId/:categoryId/:boardId/:pageNum', function (req, res) {
+    app.get('/burning/sdk/getPostList', function (req, res) {
 
         var appId = req.param('appId');
         var categoryId = req.param('categoryId');
         var boardId = req.param('boardId');
         var pageNum = req.param('pageNum');
-        var pageSize = 10;
+        var pageSize = req.param('pageSize') || 10;
         if (!util.valiNum(pageNum)) {
             res.json(200, {rs: 0, msg: 'error param'});
             return;
@@ -27,9 +27,9 @@ module.exports = function (app) {
         postService.getPostList(appId, categoryId, boardId, pageNum, pageSize, function (err, docs) {
             if (err) {
                 logger.error(err);
-                res.json(200, {rs: 0, msg: 'system error'});
+                res.json(200, {status: 0, msg: 'system error'});
             } else {
-                res.json(200, {rs: 1, postlist: docs});
+                res.json(200, {status: 1, postlist: docs});
             }
         });
 

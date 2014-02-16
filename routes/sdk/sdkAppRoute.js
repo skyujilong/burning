@@ -10,7 +10,7 @@ var logger = require('./../../common/log').getLogger();
 module.exports = function(app){
 
 
-    app.get('/burning/sdk/getAppInfoById/:appId',function(req,res){
+    app.get('/burning/sdk/getAppInfoById',function(req,res){
 
         var _id = req.param('appId');
         var app = new App();
@@ -19,9 +19,9 @@ module.exports = function(app){
 
             if(err){
                 logger.error(err);
-                res.json(200,{rs:0});
+                res.json(200,{status:0});
             }else{
-                res.json(200,{rs:1,app:doc});
+                res.json(200,{status:1,app:doc});
             }
 
         });
