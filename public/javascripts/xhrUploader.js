@@ -40,10 +40,10 @@ define(function () {
                     }
                 };
             }
-            if (_processFn) {
+            if (_errorFn) {
                 this.xhr.addEventListener('error', _errorFn, false);
             }
-            if (_errorFn) {
+            if (_processFn) {
                 this.xhr.upload.addEventListener('progress', _processFn, false);
             }
 

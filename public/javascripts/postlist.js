@@ -71,6 +71,7 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                         return false;
                     }
                     var $parent = $(e.target).parent();
+                    $parent.find('.progress-bar').css('width','0');
                     uploader.init('/burning/cms/uploader', e.target, function (xhr) {
                         var data = xhr.currentTarget.response;
                         if(!data.rs){
@@ -102,6 +103,14 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                                 tThis.showPic($parent,data.path);
                             }
                         }
+                    },function(event){
+                        //event lengthComputable loaded total
+                        if(event.lengthComputable){
+                            var now = Math.ceil(event.loaded / event.total * 100);
+                            $parent.find('.progress-bar').css('width',now + '%');
+                        }
+                    },function(){
+                        alert('上传失败！');
                     });
                     uploader.send();
                 }
@@ -164,6 +173,11 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                     '<div class="panel-heading">上传图片</div>',
                     '<div class="panel-body">',
                         '<input data-id="',imgId,'" type="file">',
+                        '<div class="progress postProgress">',
+                            '<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemax="100">',
+                                '<span class="sr-only"></span>',
+                            '</div>',
+                        '</div>',
                     '</div>',
                     '<div class="panel-footer text-center">',
                         '<button data-id="',imgId,'" class="btn btn-warning btn-sm delbtn">删除本段图片</button>',
