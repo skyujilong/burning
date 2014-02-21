@@ -26,7 +26,11 @@ var PostService = {
                 var cursor = collection.find({'appId':DBUtil.getObjectId(appId),'categoryId':DBUtil.getObjectId(categoryId),'boardId':DBUtil.getObjectId(boardId)},{sort:{'createTime':-1}});
                 cursor.limit(pageSize).skip((pageNum - 1)*pageSize);
                 cursor.toArray(function(err,docs){
-                    docs.urlPromotion = decodeURI(docs.urlPromotion);
+                    for(var i = 0, len = docs.length; i < len ; i ++ ){
+                        if(docs[i].urlPromotion){
+                            docs[i].urlPromotion = decodeURI(docs[i].urlPromotion);
+                        }
+                    }
                     docs.pageCount = Math.ceil(count/pageSize);
                     fn(err,docs);
                     closeCallBack();
