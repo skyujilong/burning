@@ -87,7 +87,8 @@ define(['jquery','./jquery.blockUI'], function ($) {
                     '-webkit-border-radius': '10px',
                     '-moz-border-radius': '10px',
                     opacity: .6,
-                    color: '#fff'
+                    color: '#fff',
+                    'font-size': '30px'
                 }
             });
         }

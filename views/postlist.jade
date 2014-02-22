@@ -59,6 +59,7 @@ html
                                         img.postImg(width='500',src='#{content.info.cover}')
                                         br
                             div.panel-footer.text-right
+                                button.btn.btn-sm.btn-primary.update-post-btn(data-post-id='#{post._id}') 更新url
                                 button.btn.btn-sm.btn-warning.del-post-btn(data-post-id='#{post._id}') 删除
         div.container.text-right
             ul#postPage.pagination(data-count="#{posts.pageCount}",data-page-num="#{pageNum}",data-url="/burning/cms/getPostlist/#{app._id}/#{category._id}/#{board._id}/$")
@@ -81,7 +82,7 @@ html
                                 input(type="text",class="form-control",name="postTitle",placeholder="Enter post title")
                             div.form-group
                                 label(for="urlPromotion") 推广商品连接
-                                input.form-control(type="text",name="urlPromotion",placeholder="Enter url")
+                                input.form-control(type="text",name="urlPromotion",placeholder="Enter url with 'http://....'")
                             div.contents
                                 label 内容
 
@@ -94,3 +95,27 @@ html
 
 
 
+        div#updateBox.fade.modal(role='dialog',aria-hidden='true',aria-labelledby="myModalLabel",data-app-id="#{app._id}",data-category-id="#{category._id}",data-board-id="#{board._id}",data-post-id="")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button.close(data-dismiss="modal",aria-hidden="true") &times;
+                        h4.modal-title Update Post
+                    div.modal-body
+                        form(role="form")
+                            div.form-group
+                                label(for="postTitle") 帖子标题
+                                input(type="text",class="form-control",name="postTitle",placeholder="Enter post title",disabled)
+                            div.form-group
+                                label(for="urlPromotion") 推广商品连接
+                                input.form-control(type="text",name="urlPromotion",placeholder="Enter url with 'http://....'")
+                        //
+                            div.contents
+                                label 内容
+
+                    div.modal-footer
+                        //
+                            button.btn.btn-primary.btn-sm.add-text 添加文本
+                            button.btn.btn-primary.btn-sm.add-pic 添加图片
+                        button.btn-primary.btn.btn-sm.submit 确定
+                        button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消

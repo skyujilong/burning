@@ -44,10 +44,6 @@ app.configure('development', function () {
     logger.develop();
     app.use(log4js.connectLogger(logger.getLogger('infoLogger'), {level: 'auto', format: ':method :url'}));
     app.use(log4js.connectLogger(logger.getLogger('system'), {level: 'debug', format: ':method :url'}));
-    app.use(function (req, res, next) {
-        logger.getLogger('infoLogger').info("path:" + req.path + "; params:" + req.params);
-        next();
-    });
 });
 app.configure('production', function(){
     app.set('delimiter','/');
@@ -66,10 +62,6 @@ app.configure('production', function(){
     logger.getLogger('infoLogger').info('run in production evn.................');
     app.use(log4js.connectLogger(logger.getLogger('infoLogger'), {level: 'info', format: ':method :url'}));
     app.use(log4js.connectLogger(logger.getLogger('system'), {level: 'debug', format: ':method :url'}));
-    app.use(function (req, res, next) {
-        logger.getLogger('infoLogger').info("path:" + req.path + "; params:" + req.params);
-        next();
-    });
 });
 app.configure(function(){
     //提供更新url服务

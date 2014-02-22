@@ -146,6 +146,19 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
             util.sendAjax('/burning/cms/delPostById', {
                 _id : tThis._id
             }, 'json', fn, 'delete');
+        },
+        getPostById : function(fn){
+            var tThis = this;
+            util.sendAjax('/burning/cms/getPostById',{
+                _id : tThis._id
+            },'json',fn,'get');
+        },
+        updatePostById : function(fn){
+            var tThis = this;
+            util.sendAjax('/burning/cms/updatePostById',{
+                _id: tThis._id,
+                urlPromotion : tThis.urlPromotion
+            },'json',fn,'put');
         }
     };
 

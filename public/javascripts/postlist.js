@@ -20,6 +20,7 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
     var viewHandler = {
         init : function(){
             this.initDelPostHandler();
+            this.initUpdatePostHandler();
         },
         initDelPostHandler : function (){
             $('.del-post-btn').click(function(e){
@@ -35,7 +36,22 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                     }
                 });
             });
-        }
+        },
+        initUpdatePostHandler : function(){
+            var tThis = this;
+            $('.update-post-btn').click(function(e){
+                var post_id = $(e.target).data('post-id');
+                var post = new Post(post_id);
+                post.getPostById(function(data){
+                    if (data.rs && data.rs == 1) {
+                        updateFormHandler.init(data.post);
+                    } else {
+                        alert('error');
+                    }
+                });
+
+            });
+        },
     };
     viewHandler.init();
 
@@ -210,5 +226,39 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
 
     createFormHandler.init();
 
+    var updateFormHandler = {
+        post : null,
+        init : function(post){
+            this.post = post;
+            this.initUpdateFormData();
+        },
+        initUpdateFormData: function(){
+            var post = this.post;
+            var $updateBox = $('#updateBox');
+            $updateBox.data('post-id',post._id);
+            $updateBox.find('input[name="postTitle"]').val(post.title);
+            $updateBox.find('input[name="urlPromotion"]').val(decodeURI(post.urlPromotion));
+            $('#updateBox').modal('toggle');
+        },
+        initBtnHandler:function(){
+            var tThis = this;
+            $('#updateBox').find('.submit').click(function(e){
+                var _post = new Post();
+                _post._id = tThis.post._id;
+                _post.urlPromotion = encodeURI($('#updateBox').find('input[name="urlPromotion"]').val());
+                _post.updatePostById(function(data){
+                    if(data.rs == 1){
+                        $('#updateBox').modal('hide');
+                        console.log(data.msg);
+                        util.showMsg(data.msg);
+                        setTimeout(function(){
+                            location.reload(true);
+                        },2000);
+                    }
+                });
+            });
+        }
+    };
 
+    updateFormHandler.initBtnHandler();
 });

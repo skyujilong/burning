@@ -69,6 +69,40 @@ var PostService = {
                 closeCallBack();
             });
         });
+    },
+
+    getPostById: function(_id,fn){
+        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
+            if(err){
+                fn(err);
+                closeCallBack();
+                return;
+            }
+            collection.findOne({_id:DBUtil.getObjectId(_id)},function(err,doc){
+                fn(err,doc);
+                closeCallBack();
+            });
+        });
+    },
+
+    updatePostById : function(_id,url,fn){
+        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
+            if(err){
+                fn(err);
+                closeCallBack();
+                return;
+            }
+            var updateTime = new Date().getTime();
+            collection.update({_id:DBUtil.getObjectId(_id)},{
+                $set:{
+                    urlPromotion : url,
+                    lastUpdateTime : updateTime
+                }
+            },{w:1},function(){
+                fn(err);
+                closeCallBack();
+            });
+        });
     }
 };
 

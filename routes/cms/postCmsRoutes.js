@@ -84,7 +84,7 @@ module.exports = function (app) {
         });
 
     });
-    app.del('/burning/cms/delPostById',function(req,res){
+    app.del('/burning/cms/delPostById',loginFilter,function(req,res){
         var _id = req.param('_id');
         postService.delPostById(_id,function(err,doc){
             if(err){
@@ -92,6 +92,31 @@ module.exports = function (app) {
                 res.json(500,{rs:0,msg:'error'});
             }else{
                 res.json(200,{rs:1,msg:"删除成功"});
+            }
+        });
+    });
+
+    app.get('/burning/cms/getPostById',loginFilter,function(req,res){
+        var _id = req.param('_id');
+        postService.getPostById(_id,function(err,doc){
+            if(err){
+                logger.error(err);
+                res.json(500,{rs:0,msg:'帖子查找发生未知错误，请查看日志！'});
+            }else{
+                res.json(200,{rs:1,post:doc});
+            }
+        });
+    });
+
+    app.put('/burning/cms/updatePostById',loginFilter,function(req,res){
+        var _id = req.param('_id');
+        var urlPromotion = req.param('urlPromotion');
+        postService.updatePostById(_id,urlPromotion,function(err){
+            if(err){
+                logger.error(err);
+                res.json(500,{rs:0,msg:'帖子查找发生未知错误，请查看日志！'});
+            }else{
+                res.json(200,{rs:1,msg:"帖子修改成功！"});
             }
         });
     });
