@@ -9,7 +9,7 @@ var util = require('./../../common/util').util;
 var logger = require('./../../common/log').getLogger();
 var Post = require('./../../modules/Post');
 var PostContent = require('./../../modules/PostContent');
-var postService = require('./../../service/PostService').service;
+var postService = require('./../../service/PostSdkService').service;
 module.exports = function (app) {
 
 

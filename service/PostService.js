@@ -23,7 +23,7 @@ var PostService = {
                     closeCallBack();
                     return;
                 }
-                var cursor = collection.find({'appId':DBUtil.getObjectId(appId),'categoryId':DBUtil.getObjectId(categoryId),'boardId':DBUtil.getObjectId(boardId)},{sort:{'createTime':-1}});
+                var cursor = collection.find({'appId':DBUtil.getObjectId(appId),'categoryId':DBUtil.getObjectId(categoryId),'boardId':DBUtil.getObjectId(boardId)},{sort:{'createTime':-1,'lastUpdateTime':-1}});
                 cursor.limit(pageSize).skip((pageNum - 1)*pageSize);
                 cursor.toArray(function(err,docs){
                     for(var i = 0, len = docs.length; i < len ; i ++ ){
@@ -98,10 +98,30 @@ var PostService = {
                     urlPromotion : url,
                     lastUpdateTime : updateTime
                 }
-            },{w:1},function(){
+            },{w:1},function(err){
                 fn(err);
                 closeCallBack();
             });
+        });
+    },
+
+    updatePostStatusById : function(_id,status,fn){
+        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
+            if(err){
+                fn(err);
+                closeCallBack();
+                return;
+            }
+            var updateTime = new Date().getTime();
+            collection.update({_id:DBUtil.getObjectId(_id)},{
+                $set:{
+                    lastUpdateTime : updateTime,
+                    status:status
+                }
+            },{w:1},function(err,doc){
+                fn(err,doc);
+                closeCallBack();
+            })
         });
     }
 };

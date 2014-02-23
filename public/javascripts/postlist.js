@@ -51,7 +51,20 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                 });
 
             });
-        },
+            $('.update-post-status').click(function(e){
+                var post_id= $(e.target).data('post-id');
+                var post = new Post(post_id);
+                post.status = $(e.target).data('status');
+                post.updatePostStatus(function(data){
+                    if(data.rs && data.rs == 1){
+                        util.showMsg(data.msg);
+                        setTimeout(function(){
+                            location.reload(true);
+                        },2000);
+                    }
+                });
+            });
+        }
     };
     viewHandler.init();
 
@@ -249,8 +262,6 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                 _post.updatePostById(function(data){
                     if(data.rs == 1){
                         $('#updateBox').modal('hide');
-                        console.log(data.msg);
-                        util.showMsg(data.msg);
                         setTimeout(function(){
                             location.reload(true);
                         },2000);

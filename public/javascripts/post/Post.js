@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
-    var Post = function (_id, appId, categoryId, boardId, title,  createTime, urlPromotion, lastUpdateTime) {
+    var Post = function (_id, appId, categoryId, boardId, title,  createTime, urlPromotion, lastUpdateTime , fontCoverPic , status) {
         this._id = _id;
         this.appId = appId;
         this.categoryId = categoryId;
@@ -16,6 +16,8 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
         this.urlPromotion = urlPromotion;
         this.lastUpdateTime = lastUpdateTime;
         this.postContents = [];
+        this.fontCoverPic = fontCoverPic;
+        this.status = status;
     };
 
     Post.prototype = {
@@ -73,7 +75,8 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
                                 boardId : tThis.boardId,
                                 title : tThis.title,
                                 urlPromotion : tThis.urlPromotion,
-                                postContents : tThis.postContents
+                                postContents : tThis.postContents,
+                                status : tThis.status
                             }
                     }, 'json', function(data){
                         if(data.rs == 1){
@@ -90,6 +93,7 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
         initVals : function(){
             this.title = $('#createBox').find('input[name="postTitle"]').val();
             this.urlPromotion = encodeURI($('#createBox').find('input[name="urlPromotion"]').val());
+            this.status = $('#createBox').find('select[name="status"]').val();
             for(var i = 0 , len = this.postContents.length; i<len; i++){
                 if(this.postContents[i].type == 1){
                     this.initTextContent(this.postContents[i]);
@@ -158,6 +162,13 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
             util.sendAjax('/burning/cms/updatePostById',{
                 _id: tThis._id,
                 urlPromotion : tThis.urlPromotion
+            },'json',fn,'put');
+        },
+        updatePostStatus : function(fn){
+            var tThis = this;
+            util.sendAjax('/burning/cms/updatePostStatus',{
+                _id:tThis._id,
+                status : tThis.status
             },'json',fn,'put');
         }
     };

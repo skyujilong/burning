@@ -64,11 +64,11 @@ module.exports = function (app) {
 
     app.post('/burning/cms/createPost',loginFilter,function(req,res){
         var _post = req.param('post');
-        var post = new Post(dbUtil.getObjectId(dbUtil.getNewId()),dbUtil.getObjectId(_post.appId),dbUtil.getObjectId(_post.categoryId),dbUtil.getObjectId(_post.boardId),_post.title,null,null,_post.urlPromotion,null,null);
+        var post = new Post(dbUtil.getObjectId(dbUtil.getNewId()),dbUtil.getObjectId(_post.appId),dbUtil.getObjectId(_post.categoryId),dbUtil.getObjectId(_post.boardId),_post.title,null,null,_post.urlPromotion,null,null,_post.status);
         for(var i = 0, len=_post.postContents.length ; i < len ; i++){
             var _content = _post.postContents[i];
             var postContent = new PostContent(dbUtil.getObjectId(_content._id),_content.info,_content.type,i);
-            if(postContent.type != 1){
+            if(postContent.type != 1 && !post.fontCoverPic){
                 post.fontCoverPic = postContent.info.lowPath;
 //                post.innerMainPic = postContent.info.path;
             }
@@ -117,6 +117,19 @@ module.exports = function (app) {
                 res.json(500,{rs:0,msg:'帖子查找发生未知错误，请查看日志！'});
             }else{
                 res.json(200,{rs:1,msg:"帖子修改成功！"});
+            }
+        });
+    });
+
+    app.put('/burning/cms/updatePostStatus',loginFilter,function(req,res){
+        var _id = req.param('_id');
+        var status = req.param('status');
+        postService.updatePostStatusById(_id,status,function(err){
+            if(err){
+                logger.error(err);
+                res.json(500,{rs:0,msg:'帖子状态修改发生未知错误，请查看日志！'});
+            }else{
+                res.json(200,{rs:1,msg:"帖子状态修改成功！"});
             }
         });
     });

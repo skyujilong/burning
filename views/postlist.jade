@@ -59,8 +59,14 @@ html
                                         img.postImg(width='500',src='#{content.info.cover}')
                                         br
                             div.panel-footer.text-right
+                                if post.status == 1
+                                    button.btn.btn-sm.btn-primary.update-post-status(data-post-id='#{post._id}',data-status='0') 隐藏帖子
+                                else if post.status == 0
+                                    button.btn.btn-sm.btn-primary.update-post-status(data-post-id='#{post._id}',data-status='1') 显示帖子
+
                                 button.btn.btn-sm.btn-primary.update-post-btn(data-post-id='#{post._id}') 更新url
                                 button.btn.btn-sm.btn-warning.del-post-btn(data-post-id='#{post._id}') 删除
+
         div.container.text-right
             ul#postPage.pagination(data-count="#{posts.pageCount}",data-page-num="#{pageNum}",data-url="/burning/cms/getPostlist/#{app._id}/#{category._id}/#{board._id}/$")
 
@@ -83,6 +89,11 @@ html
                             div.form-group
                                 label(for="urlPromotion") 推广商品连接
                                 input.form-control(type="text",name="urlPromotion",placeholder="Enter url with 'http://....'")
+                            div.form-group
+                                label(for="status") 帖子状态
+                                select.form-control(name="status")
+                                    option(value="1") 显示(客户端可见)
+                                    option(value="0") 隐藏(客户端不可见)
                             div.contents
                                 label 内容
 

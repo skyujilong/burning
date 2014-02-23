@@ -20,9 +20,10 @@ var DBUtil = require('./../common/dbUtil').dbUtil;
  * @param lastUpdateTime 最后更新时间
  * @param fontCoverPic 列表封面地址
  * @param innerMainPic 帖子显示的大图地址
+ * @param status 帖子 的状态 0 为隐藏， 1 为显示
  * @constructor
  */
-var Post = function(_id,appId,categoryId,boardId,title,postContents,createTime,urlPromotion,lastUpdateTime,fontCoverPic){
+var Post = function(_id,appId,categoryId,boardId,title,postContents,createTime,urlPromotion,lastUpdateTime,fontCoverPic,status){
     this._id = _id || DBUtil.getNewId();
     this.appId = appId;
     this.categoryId = categoryId;
@@ -33,6 +34,7 @@ var Post = function(_id,appId,categoryId,boardId,title,postContents,createTime,u
     this.urlPromotion = urlPromotion;
     this.lastUpdateTime = lastUpdateTime || this.createTime;
     this.fontCoverPic = fontCoverPic;
+    this.status = status;
 };
 
 
