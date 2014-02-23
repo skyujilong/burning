@@ -13,3 +13,13 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.text-red{
+    color: darkred;
+}
+.text-green{
+    color: green;
+}
+.post-handler-btns{
+    margin-right: 5px;
+}

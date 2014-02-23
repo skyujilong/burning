@@ -42,8 +42,16 @@ html
 
                     div.panel.panel-default
                         div.panel-heading
-                            h4.panel-title
-                                a(data-toggle='collapse',data-parent='#accordion',href="##{post._id}panel") #{post.title}
+                            div.panel-title
+                                div.row
+                                    div.col-md-9
+                                        a(data-toggle='collapse',data-parent='#accordion',href="##{post._id}panel") #{post.title}
+                                    div.col-md-3
+                                        if post.status == 1
+                                            span.text-green 当前状态为：客户端可见
+                                        else if post.status == 0
+                                            span.text-red 当前状态为：客户端不可见
+
                         div.collapse(id="#{post._id}panel")
                             div.panel-body
                                 if post.urlPromotion
@@ -60,12 +68,12 @@ html
                                         br
                             div.panel-footer.text-right
                                 if post.status == 1
-                                    button.btn.btn-sm.btn-primary.update-post-status(data-post-id='#{post._id}',data-status='0') 隐藏帖子
+                                    button.btn.btn-sm.btn-primary.post-handler-btns.update-post-status(data-post-id='#{post._id}',data-status='0') 隐藏帖子
                                 else if post.status == 0
-                                    button.btn.btn-sm.btn-primary.update-post-status(data-post-id='#{post._id}',data-status='1') 显示帖子
+                                    button.btn.btn-sm.btn-primary.post-handler-btns.update-post-status(data-post-id='#{post._id}',data-status='1') 显示帖子
 
-                                button.btn.btn-sm.btn-primary.update-post-btn(data-post-id='#{post._id}') 更新url
-                                button.btn.btn-sm.btn-warning.del-post-btn(data-post-id='#{post._id}') 删除
+                                button.btn.btn-sm.btn-primary.post-handler-btns.update-post-btn(data-post-id='#{post._id}') 更新url
+                                button.btn.btn-sm.btn-warning.post-handler-btns.del-post-btn(data-post-id='#{post._id}') 删除
 
         div.container.text-right
             ul#postPage.pagination(data-count="#{posts.pageCount}",data-page-num="#{pageNum}",data-url="/burning/cms/getPostlist/#{app._id}/#{category._id}/#{board._id}/$")
