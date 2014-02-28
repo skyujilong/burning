@@ -23,3 +23,7 @@
 .post-handler-btns{
     margin-right: 5px;
 }
+.left-control{
+    margin:20px 10px;
+    display: inline-block;
+}

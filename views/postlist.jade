@@ -45,6 +45,8 @@ html
                             div.panel-title
                                 div.row
                                     div.col-md-9
+                                        input(type="checkbox")
+                                        |&nbsp;&nbsp;
                                         a(data-toggle='collapse',data-parent='#accordion',href="##{post._id}panel") #{post.title}
                                     div.col-md-3
                                         if post.status == 1
@@ -75,8 +77,18 @@ html
                                 button.btn.btn-sm.btn-primary.post-handler-btns.update-post-btn(data-post-id='#{post._id}') 更新url
                                 button.btn.btn-sm.btn-warning.post-handler-btns.del-post-btn(data-post-id='#{post._id}') 删除
 
-        div.container.text-right
-            ul#postPage.pagination(data-count="#{posts.pageCount}",data-page-num="#{pageNum}",data-url="/burning/cms/getPostlist/#{app._id}/#{category._id}/#{board._id}/$")
+        div.container
+            div.row
+                div.col-md-6.text-left
+                    div.left-control
+                        label
+                            input(type="checkbox")
+                            |全选
+                        a.btn.btn-sm.btn-primary 显示
+                        a.btn.btn-sm.btn-warning 隐藏
+                        a.btn.btn-sm.btn-warning 删除
+                div.col-md-6.text-right
+                    ul#postPage.pagination(data-count="#{posts.pageCount}",data-page-num="#{pageNum}",data-url="/burning/cms/getPostlist/#{app._id}/#{category._id}/#{board._id}/$")
 
 
 
