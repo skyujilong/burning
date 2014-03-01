@@ -170,6 +170,19 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
                 _id:tThis._id,
                 status : tThis.status
             },'json',fn,'put');
+        },
+        multUpdatePostStatus : function(ids,status,fn){
+            var tThis = this;
+            util.sendAjax('/burning/cms/multUpdatePostStatus',{
+                ids:ids,
+                status : status
+            },'json',fn,'put');
+        },
+        multdelPostStatus : function(ids,fn){
+            var tThis = this;
+            util.sendAjax('/burning/cms/multDelPost',{
+                ids:ids
+            },'json',fn,'delete');
         }
     };
 

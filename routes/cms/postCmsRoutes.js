@@ -134,6 +134,32 @@ module.exports = function (app) {
         });
     });
 
+    // 批量修改状态
+    app.put('/burning/cms/multUpdatePostStatus',loginFilter,function(req,res){
+        var ids = req.param('ids').split(',');
+        var status = req.param('status');
+        postService.multUpdatePostStatus(ids,status,function(err,doc){
+            if(err){
+                logger.error(err);
+                res.json(500,{rs:0,msg:'批量修改帖子状态发生错误，请查看日志！'});
+            }else{
+                res.json(200,{rs:1,msg:'批量修改帖子状态成功！'});
+            }
+        });
+    });
+
+    app.del('/burning/cms/multDelPost',loginFilter,function(req,res){
+        var ids = req.param('ids').split(',');
+        postService.multDelPost(ids,function(err,count){
+            if(err){
+                logger.error(err);
+                res.json(500,{rs:0,msg:'批量删除帖子发生错误，请查看日志！'});
+            }else{
+                res.json(200,{rs:1,msg:'批量删除帖子成功！'});
+            }
+        });
+    });
+
 };
 
 function getCategory(categorys, categoryId) {

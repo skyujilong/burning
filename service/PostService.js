@@ -123,8 +123,49 @@ var PostService = {
                 closeCallBack();
             })
         });
+    },
+
+    multUpdatePostStatus : function(ids,status,fn){
+        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
+            if(err){
+                fn(err);
+                closeCallBack();
+                return;
+            }
+            var updateTime = new Date().getTime();
+            var _ids = getObjectIds(ids);
+            collection.update({_id:{$in:_ids}},{$set:{
+                lastUpdateTime:updateTime,
+                status:status
+            }},{multi:true},function(err,doc){
+                fn(err,doc);
+                closeCallBack();
+            });
+        });
+    },
+
+    multDelPost : function(ids,fn){
+        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
+            if(err){
+                fn(err);
+                closeCallBack();
+                return;
+            }
+            var _ids = getObjectIds(ids);
+            collection.remove({_id : {$in : _ids}},{safe:true,multi:true},function(err,count){
+                fn(err,count);
+                closeCallBack();
+            });
+        });
     }
 };
+function getObjectIds(ids){
+    var _ids = new Array(ids.length);
+    for(var i = 0, len = ids.length; i < len; i++){
+        _ids.push(DBUtil.getObjectId(ids[i]));
+    }
+    return _ids;
+}
 
 
 

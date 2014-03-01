@@ -45,7 +45,7 @@ html
                             div.panel-title
                                 div.row
                                     div.col-md-9
-                                        input(type="checkbox")
+                                        input.check-mark(type="checkbox",value="#{post._id}")
                                         |&nbsp;&nbsp;
                                         a(data-toggle='collapse',data-parent='#accordion',href="##{post._id}panel") #{post.title}
                                     div.col-md-3

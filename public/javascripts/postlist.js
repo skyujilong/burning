@@ -271,5 +271,92 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
         }
     };
 
+
+    var leftBtnsHandler = {
+        init : function(){
+            this.initEventHandler();
+        },
+        initEventHandler : function(){
+            var _post = new Post();
+            var tThis = this;
+            $('.left-control').find('input[type="checkbox"]').change(function(e){
+                tThis.changeCheckboxs(this.checked);
+            });
+            //显示操作
+            $('.left-control').find('a:eq(0)').click(function(e){
+                if(tThis.isUncheckCheckBox()){
+                    _post.multUpdatePostStatus(tThis.getIds(),1,function(data){
+                        if(data.rs && data.rs == 1){
+                            util.showMsg('帖子状态修改成功');
+                            setTimeout(function(){
+                                location.reload(true);
+                            },3000);
+                        }else{
+                            util.showMsg('帖子状态修改失败');
+                        }
+                    });
+                }else{
+                    util.showMsg('请选择要操作的帖子');
+                    return;
+                }
+            });
+            //隐藏操作
+            $('.left-control').find('a:eq(1)').click(function(e){
+                if(tThis.isUncheckCheckBox()){
+                    _post.multUpdatePostStatus(tThis.getIds(),0,function(data){
+                        if(data.rs && data.rs == 1){
+                            util.showMsg('帖子状态修改成功');
+                            setTimeout(function(){
+                                location.reload(true);
+                            },3000);
+                        }else{
+                            util.showMsg('帖子状态修改失败');
+                        }
+                    });
+                }else{
+                    util.showMsg('请选择要操作的帖子');
+                    return;
+                }
+            });
+            //删除操作
+            $('.left-control').find('a:eq(2)').click(function(e){
+                if(tThis.isUncheckCheckBox()){
+                    _post.multdelPostStatus(tThis.getIds(),function(data){
+                        if(data.rs && data.rs == 1){
+                            util.showMsg('帖子删除成功');
+                            setTimeout(function(){
+                                location.reload(true);
+                            },3000);
+                        }else{
+                            util.showMsg('帖子删除失败');
+                        }
+                    });
+                }else{
+                    util.showMsg('请选择要操作的帖子');
+                    return;
+                }
+            });
+        },
+        changeCheckboxs : function(flag){
+            $.each($('.check-mark'),function(i,dom){
+                dom.checked = flag;
+            });
+        },
+        isUncheckCheckBox:function(){
+            var $check = $('.check-mark:checked');
+            return $check.length > 0 ? true : false;
+        },
+        getIds : function(){
+            var ids = [];
+            var $check = $('.check-mark:checked');
+            for(var i = 0, len = $check.length; i < len ; i++){
+                ids.push($check[i].value);
+            }
+            return  ids.join(',');
+
+        }
+    };
+    leftBtnsHandler.init();
+
     updateFormHandler.initBtnHandler();
 });
