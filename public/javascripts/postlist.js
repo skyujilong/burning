@@ -5,7 +5,7 @@
  * Time: 下午8:23
  * To change this template use File | Settings | File Templates.
  */
-define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler', 'bootstrap'], function (doc, $, util, Post, uploader, pageHandler) {
+define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler', 'bootstrap'], function (doc, $, util, Post, uploader, pageHandler, _bootstrap) {
 
     $('form').on('submit', function () {
         return false;
