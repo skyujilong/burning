@@ -137,7 +137,7 @@ module.exports = function (app) {
     // 批量修改状态
     app.put('/burning/cms/multUpdatePostStatus',loginFilter,function(req,res){
         var ids = req.param('ids').split(',');
-        var status = req.param('status');
+        var status = +req.param('status');
         postService.multUpdatePostStatus(ids,status,function(err,doc){
             if(err){
                 logger.error(err);
