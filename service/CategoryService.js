@@ -5,67 +5,73 @@
  * Time: 下午6:55
  * To change this template use File | Settings | File Templates.
  */
-var DBUtil = require('./../common/dbUtil').dbUtil;
 var logger = require('./../common/log').getLogger();
+var Constant = require('./../common/Constant');
+var async = require('async');
 var CategoryService = {
-    getAllCategory: function (app_id, fn) {
-        DBUtil.getDBConnection('app', function (err, collection, closeCallBack) {
-            if (err) {
-                fn(err);
-                closeCallBack();
-                return;
-            }
-            collection.findOne({_id: DBUtil.getObjectId(app_id)}, function (err, doc) {
-                fn(err, doc);
-                closeCallBack();
-            });
-        }, false);
+    daoFactory : null,
+    init : function(daoFactory){
+        this.daoFactory = daoFactory;
     },
-    createCategory: function (appId, fn) {
-        var tThis = this;
-        DBUtil.getDBConnection('app', function (err, collection, closeCallBack) {
-            if (err) {
-                fn(err);
-                closeCallBack();
-                return;
+    getAllCategory: function (fn) {
+        var categoryDao = this.daoFactory[Constant.DAO_CATEGORY];
+        async.waterfall([
+            function(callback){
+                categoryDao.open(callback);
+            },
+            function(db,callback){
+                categoryDao.getAllCategory(db,callback);
+            },
+            function(db,list,callback){
+                categoryDao.close(db);
+                callback(null,list);
             }
-            collection.update({_id: DBUtil.getObjectId(appId)},
-                {$push: {categorys: {categoryName: tThis.name, _id: DBUtil.getObjectId(tThis._id)}}}, {safe: true}, function (err, doc) {
-                    fn(err, doc);
-                    closeCallBack();
-                });
-        }, false);
+        ],fn);
     },
-    deleteCategory: function (appId, fn) {
-        var tThis = this;
-        DBUtil.getDBConnection('app', function (err, collection, closeCallBack) {
-            if (err) {
-                fn(err);
-                closeCallBack();
-                return;
+    createCategory: function (category,fn) {
+        var categoryDao = this.daoFactory[Constant.DAO_CATEGORY];
+        async.waterfall([
+            function(callback){
+                categoryDao.open(callback);
+            },
+            function(db,callback){
+                categoryDao.saveCategory(db,category,callback);
+            },
+            function(db,doc,callback){
+                categoryDao.close(db);
+                callback(null,doc);
             }
-            collection.update({_id: DBUtil.getObjectId(appId)},
-                {$pull: {'categorys': {_id: DBUtil.getObjectId(tThis._id)}}}, {safe: true}, function (err, doc) {
-                    fn(err, doc);
-                    closeCallBack();
-                });
-        });
+        ],fn);
     },
-    updateCategory: function (appId, fn) {
-        var tThis = this;
-        DBUtil.getDBConnection('app',function(err,collection,closeCallBack){
-            if (err) {
-                fn(err);
-                closeCallBack();
-                return;
+    deleteCategory: function (categoryId,fn) {
+        var categoryDao = this.daoFactory[Constant.DAO_CATEGORY];
+        async.waterfall([
+            function(callback){
+                categoryDao.open(callback);
+            },
+            function(db,callback){
+                categoryDao.delCategoryById(db,categoryId,callback);
+            },
+            function(db,count,callback){
+                categoryDao.close(db);
+                callback(null,count);
             }
-            collection.update({_id:DBUtil.getObjectId(appId),'categorys._id':DBUtil.getObjectId(tThis._id)},
-                {$set:{'categorys.$.categoryName':tThis.name}},{safe:true},function(err,count){
-                    console.log(count);
-                    fn(err,count);
-                    closeCallBack();
-                });
-        },false);
+        ],fn);
+    },
+    updateCategory: function (category, fn) {
+        var categoryDao = this.daoFactory[Constant.DAO_CATEGORY];
+        async.waterfall([
+            function(callback){
+                categoryDao.open(callback);
+            },
+            function(db,callback){
+                categoryDao.updateCategory(db,category,callback);
+            },
+            function(db,doc,callback){
+                categoryDao.close(db);
+                callback(null,doc);
+            }
+        ],fn);
     }
 };
 

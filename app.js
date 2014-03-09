@@ -8,11 +8,11 @@ var path = require('path');
 var logger = require('./common/log');
 var log4js = require('log4js');
 var gm = require('gm');
-var dbConfig = require('./db').db;
-var onLineDBConfig = require('./db').online;
+var dbConfig = null;
 var MongoStore = require('connect-mongo')(express);
 var flash = require('connect-flash');
 var app = express();
+var Constant = require('./common/Constant');
 // all environments
 app.configure(function () {
     app.set('port', process.env.PORT || 3000);
@@ -29,6 +29,7 @@ app.configure(function () {
 });
 // development only
 app.configure('development', function () {
+    dbConfig = require('./db').db;
     app.set('delimiter','\\');
     app.set('ctx','http://127.0.0.1:3000');
     app.use(express.session({
@@ -46,15 +47,16 @@ app.configure('development', function () {
     app.use(log4js.connectLogger(logger.getLogger('system'), {level: 'debug', format: ':method :url'}));
 });
 app.configure('production', function(){
+    dbConfig = require('./db').online;
     app.set('delimiter','/');
     app.set('ctx','http://115.28.225.107:3000');
     app.use(express.session({
         secret: 'burning',
         cookie: {maxAge: 1000 * 60 * 60 * 4},
         store: new MongoStore({
-            username: onLineDBConfig.username,
-            password: onLineDBConfig.pwd,
-            db: onLineDBConfig.dbName
+            username: dbConfig.username,
+            password: dbConfig.pwd,
+            db: dbConfig.dbName
         })
     }));
 
@@ -63,7 +65,13 @@ app.configure('production', function(){
     app.use(log4js.connectLogger(logger.getLogger('infoLogger'), {level: 'info', format: ':method :url'}));
     app.use(log4js.connectLogger(logger.getLogger('system'), {level: 'debug', format: ':method :url'}));
 });
+
 app.configure(function(){
+    //启动连接池
+    app.set('dbInfo',dbConfig);
+    app.set('pool',require('./dao/DBPool')(app));
+    app.set(Constant.DAO_FACTORY,require('./dao/DaoFactory')(app));
+    app.set(Constant.SERVICE_FACTORY,require('./service/ServiceFactory')(app));
     //提供更新url服务
     app.use(flash());
     app.use(express.methodOverride());
@@ -73,11 +81,16 @@ app.configure(function(){
     });
 });
 
+/*****************************************************************************/
+require('./routes/cms/UserRoutes')(app);
 require('./routes/cms/cmsRoutes')(app);
 require('./routes/cms/postCmsRoutes')(app);
 require('./routes/cms/uploadCmsRoutes')(app);
+/*****************************************************************************/
 require('./routes/sdk/sdkAppRoute')(app);
 require('./routes/sdk/sdkPostRoute')(app);
+
+/*****************************************************************************/
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });

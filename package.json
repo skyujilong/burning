@@ -12,6 +12,9 @@
         "mongodb": "*",
         "gm": "1.*",
         "connect-mongo":"*",
-        "connect-flash":"*"
+        "connect-flash":"*",
+        "generic-pool": "2.*.*",
+        "async":"*"
+//        "connect" : "3.*"
     }
 }

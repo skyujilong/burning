@@ -9,49 +9,17 @@ var User = require('./../../modules/User');
 var App = require('./../../modules/App');
 var Category = require('./../../modules/Category');
 var Board = require('./../../modules/Board');
-var categoryService = require('./../../service/CategoryService');
 var boardService = require('./../../service/BoardService').BoardService;
 var logger = require('./../../common/log').getLogger();
 var loginFilter = require('./../../filter/filter').authorize;
+var Constant = require('./../../common/Constant');
 //cms模块 所有的路由处理逻辑
 module.exports = function(app){
 
+    var categoryService = app.get(Constant.SERVICE_FACTORY)[Constant.SERVICE_CATEGORY];
 
-    app.get('/burning/cms',function(req,res){
-        res.render('login',{email:req.session.email});
-    });
-    /**
-     * 登录
-     */
-    app.post('/burning/cms/login',function(req,res){
-        var user = new User(req.param('email'),req.param('password'));
-        user.login(user.email,user.password,function(err,isPass){
-            if(err){
-                logger.error(err);
-                //系统错误
-                res.json(500,{'rs':'0'});
-            }else if(isPass){
-                req.session.email = user.email;
-                res.json(200,{'rs':1});
-            }else{
-                res.json(401,{'rs':2});
-            }
-        });
-    });
-    /**
-     * 超级管理员 初始化
-     */
-    app.get('/burning/cms/redAdmin',function(req,res){
-        var user = new User('skyujilong@163.com','2408302');
-        user.superAdminReduction(function(err){
-            if(err){
-                logger.error(err);
-                res.json(500,{'rs':'system error'});
-            }else{
-                res.json(200,{'rs':1});
-            }
-        });
-    });
+
+
 
     app.get('/burning/cms/applist',loginFilter,function(req,res){
         var app = new App();
@@ -120,16 +88,28 @@ module.exports = function(app){
     });
 
 
-    app.get('/burning/cms/getCategorylist/:appId',loginFilter,function(req,res){
-        categoryService.getAllCategory(req.param('appId'),function(err,_app){
+//    app.get('/burning/cms/getCategorylist/:appId',loginFilter,function(req,res){
+    app.get('/burning/cms/getCategorylist',function(req,res){
+//        categoryService.getAllCategory(req.param('appId'),function(err,_app){
+//            if(err){
+//                logger.error(err);
+//                res.json(500,{'rs':'system err'});
+//                return;
+//            }
+//            var categorys = _app.categorys || [] ;
+//            res.render('categorylist',{email:req.session.email,categorys:categorys,appId:_app._id,appName:_app.appName});
+//        });
+
+        categoryService.getAllCategory(function(err,list){
             if(err){
                 logger.error(err);
-                res.json(500,{'rs':'system err'});
+                res.json(500,{'status' : 'system err'});
                 return;
             }
-            var categorys = _app.categorys || [] ;
-            res.render('categorylist',{email:req.session.email,categorys:categorys,appId:_app._id,appName:_app.appName});
+            res.render('categorylist',{categorys:list});
         });
+
+
     });
 
     app.post('/burning/cms/createCategory',loginFilter,function(req,res){
