@@ -89,8 +89,8 @@ module.exports = function () {
                 status: status,
                 lastUpdateTime: lastUpdateTime
             }
-        }, function(err,docs){
-            callback(err,db,docs);
+        }, function (err, docs) {
+            callback(err, db, docs);
         });
     };
 
@@ -106,8 +106,8 @@ module.exports = function () {
             }
         }, {
             multi: true
-        }, function(err,doc){
-            callback(err,db,doc);
+        }, function (err, doc) {
+            callback(err, db, doc);
         });
     };
 
@@ -117,11 +117,28 @@ module.exports = function () {
             $in: ids
         }}, {
             multi: true
-        }, function(err,docs){
-            callback(err,db,docs);
+        }, function (err, docs) {
+            callback(err, db, docs);
         });
     };
 
+    PostDaoImpl.prototype.deleteByCategoryId = function (db, categoryId, callback) {
+        var tThis = this;
+        db.collection(tThis.collectionName.POST).remove({categoryId: tThis.getObjectId(categoryId)}, {
+            multi: true
+        }, function (err, docs) {
+            callback(err, db, docs);
+        });
+    };
+
+    PostDaoImpl.prototype.deleteByBoardId = function (db, boardId, callback) {
+        var tThis = this;
+        db.collection(tThis.collectionName.POST).remove({boardId: tThis.getObjectId(boardId)}, {
+            multi: true
+        }, function (err, docs) {
+            callback(err,db,docs);
+        });
+    };
 
     return PostDaoImpl;
 };

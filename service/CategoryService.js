@@ -45,6 +45,7 @@ var CategoryService = {
     },
     deleteCategory: function (categoryId,fn) {
         var categoryDao = this.daoFactory[Constant.DAO_CATEGORY];
+        var postDao = this.daoFactory[Constant.DAO_POST];
         async.waterfall([
             function(callback){
                 categoryDao.open(callback);
@@ -53,7 +54,10 @@ var CategoryService = {
                 categoryDao.delCategoryById(db,categoryId,callback);
             },
             function(db,count,callback){
-                categoryDao.close(db);
+                postDao.deleteByCategoryId(db,categoryId,callback);
+            },
+            function(db,count,callback){
+                postDao.close(db);
                 callback(null,count);
             }
         ],fn);
