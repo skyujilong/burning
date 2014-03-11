@@ -49,5 +49,26 @@ module.exports = function(){
         });
     };
 
+    BoardDaoImpl.prototype.getAllBoardByCategoryId = function(db,categoryId,callback){
+        var tThis = this;
+        db.collection(tThis.collectionName.CATEGORY).find({_id:tThis.getObjectId(categoryId)},function(err,doc){
+            callback(err,db,doc);
+        });
+    };
+
+    BoardDaoImpl.prototype.deleteBoardById = function(db,categoryId,boardId,callback){
+        var tThis = this;
+        db.collection(tThis.collectionName.CATEGORY).update({_id:tThis.getObjectId(categoryId)},
+            {
+                $pull:{
+                    'boards':{
+                        _id:tThis.getObjectId(boardId)
+                    }
+                }
+            },function(err,count){
+                callback(err,db,count);
+            });
+    };
+
     return BoardDaoImpl;
 };

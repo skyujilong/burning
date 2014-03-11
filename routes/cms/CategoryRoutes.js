@@ -56,15 +56,15 @@ module.exports = function(app){
 
     app.put('/burning/cms/updateCategroy',loginFilter,function(req,res){
         var categoryName = req.param('name');
-        var appId = req.param('appId');
         var categoryId = req.param('_id');
         var category = new Category(categoryId,categoryName);
-        categoryService.updateCategory.call(category,appId,function(err,count){
-            if(err){
+        categoryService.updateCategory(category,function(req,res){
+           category = null;
+            if (err) {
                 logger.error(err);
-                res.json(500,{'rs':'system error'});
-            }else{
-                res.json(200,{'rs':1});
+                res.json(500, {'rs': 'system error'});
+            } else {
+                res.json(200, {'rs': 1});
             }
         });
     });
