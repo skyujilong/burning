@@ -85,7 +85,7 @@ app.configure(function(){
 require('./routes/cms/UserRoutes')(app);
 require('./routes/cms/BoardRoutes')(app);
 require('./routes/cms/CategoryRoutes')(app);
-require('./routes/cms/postCmsRoutes')(app);
+require('./routes/cms/PostCmsRoutes')(app);
 require('./routes/cms/uploadCmsRoutes')(app);
 /*****************************************************************************/
 require('./routes/sdk/sdkAppRoute')(app);

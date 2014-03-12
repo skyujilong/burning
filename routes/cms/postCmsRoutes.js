@@ -32,26 +32,6 @@ module.exports = function (app) {
             res.json(500, {rs: 'param error'});
             return;
         }
-//        postService.getPostList(appId, categoryId, boardId, pageNum, pageSize, function (err, docs) {
-//            if (err) {
-//                logger.error(err);
-//                res.json(500, {rs: 'system error'});
-//            } else {
-//                var _app = new App();
-//                _app._id = appId;
-//                _app.getAppById(function (err, app) {
-//                    if (err) {
-//                        logger.log(err);
-//                        res.json(500, {rs: 'system error'});
-//                    } else {
-//                        var category = getCategory(app.categorys, categoryId);
-//                        var board = getBoard(category.boards,boardId);
-//                        res.render('postlist', {posts: docs, email: req.session.email, app: app, category: category, board: board, pageNum : pageNum});
-//                    }
-//                });
-//
-//            }
-//        });
         postService.getPostList(categoryId,boardId,pageNum,pageSize,function(err,list,category){
             if(err){
                 logger.error(err);
@@ -75,7 +55,18 @@ module.exports = function (app) {
 
     app.post('/burning/cms/createPost',loginFilter,function(req,res){
         var _post = req.param('post');
-        var post = new Post(dbUtil.getObjectId(dbUtil.getNewId()),dbUtil.getObjectId(_post.appId),dbUtil.getObjectId(_post.categoryId),dbUtil.getObjectId(_post.boardId),_post.title,null,null,_post.urlPromotion,null,null,_post.status);
+        var post = new Post(
+            dbUtil.getObjectId(dbUtil.getNewId()),
+            dbUtil.getObjectId(_post.categoryId),
+            dbUtil.getObjectId(_post.boardId),
+            _post.title,
+            null,
+            null,
+            _post.taobaoUrl,
+            null,
+            null,
+            _post.status - 0,
+            _post.price - 0 );
         for(var i = 0, len=_post.postContents.length ; i < len ; i++){
             var _content = _post.postContents[i];
             var postContent = new PostContent(dbUtil.getObjectId(_content._id),_content.info,_content.type,i);
@@ -85,14 +76,14 @@ module.exports = function (app) {
             }
             post.postContents.push(postContent);
         }
-        postService.createPost(post,function(err,doc){
-            if(err){
-                logger.error(err);
-                res.json(500,{rs:0,msg:'error'});
-            }else{
-                res.json(200,{rs:1});
-            }
-        });
+//        postService.createPost(post,function(err,doc){
+//            if(err){
+//                logger.error(err);
+//                res.json(500,{rs:0,msg:'error'});
+//            }else{
+//                res.json(200,{rs:1});
+//            }
+//        });
 
     });
     app.del('/burning/cms/delPostById',loginFilter,function(req,res){
