@@ -23,12 +23,12 @@ module.exports = function () {
         });
     };
 
-    PostDaoImpl.prototype.getPostList = function (db, categoryId, boardId, start, end, callback) {
+    PostDaoImpl.prototype.getPostList = function (db, categoryId, boardId, start, pageSize, callback) {
         var tThis = this;
         db.collection(tThis.collectionName.POST)
             .find({categoryId: tThis.getObjectId(categoryId), boardId: tThis.getObjectId(boardId)})
-            .sort({lastUpdateTime: -1, createTime: -1}).skip(start).limit(end + 1).toArray(function (err, list) {
-                if (list.length < end + 1 - start) {
+            .sort({lastUpdateTime: -1, createTime: -1}).skip(start).limit(pageSize + 1).toArray(function (err, list) {
+                if (list.length < pageSize + 1 - start) {
                     list.hasNext = false;
                 } else {
                     list.hasNext = true;

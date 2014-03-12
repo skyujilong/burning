@@ -16,40 +16,51 @@ var dbUtil = require('./../../common/dbUtil').dbUtil;
 
 module.exports = function (app) {
 
+
+    var postService = app.get(Constant.SERVICE_FACTORY)[Constant.SERVICE_POST];
+
     /**
      * 获取帖子列表
      */
-    app.get('/burning/cms/getPostList/:appId/:categoryId/:boardId/:pageNum', loginFilter ,function (req, res) {
+    app.get('/burning/cms/getPostList/:categoryId/:boardId/:pageNum', loginFilter ,function (req, res) {
 
-        var appId = req.param('appId');
         var categoryId = req.param('categoryId');
         var boardId = req.param('boardId');
         var pageNum = req.param('pageNum');
-        var pageSize = 10;
+        var pageSize = 15;
         if (!util.valiNum(pageNum)) {
             res.json(500, {rs: 'param error'});
             return;
         }
-        postService.getPostList(appId, categoryId, boardId, pageNum, pageSize, function (err, docs) {
-            if (err) {
+//        postService.getPostList(appId, categoryId, boardId, pageNum, pageSize, function (err, docs) {
+//            if (err) {
+//                logger.error(err);
+//                res.json(500, {rs: 'system error'});
+//            } else {
+//                var _app = new App();
+//                _app._id = appId;
+//                _app.getAppById(function (err, app) {
+//                    if (err) {
+//                        logger.log(err);
+//                        res.json(500, {rs: 'system error'});
+//                    } else {
+//                        var category = getCategory(app.categorys, categoryId);
+//                        var board = getBoard(category.boards,boardId);
+//                        res.render('postlist', {posts: docs, email: req.session.email, app: app, category: category, board: board, pageNum : pageNum});
+//                    }
+//                });
+//
+//            }
+//        });
+        postService.getPostList(categoryId,boardId,pageNum,pageSize,function(err,list,category){
+            if(err){
                 logger.error(err);
-                res.json(500, {rs: 'system error'});
-            } else {
-                var _app = new App();
-                _app._id = appId;
-                _app.getAppById(function (err, app) {
-                    if (err) {
-                        logger.log(err);
-                        res.json(500, {rs: 'system error'});
-                    } else {
-                        var category = getCategory(app.categorys, categoryId);
-                        var board = getBoard(category.boards,boardId);
-                        res.render('postlist', {posts: docs, email: req.session.email, app: app, category: category, board: board, pageNum : pageNum});
-                    }
-                });
-
+                res.json(500,{rs:'system error'});
+            }else{
+                res.render('postlist',{posts:list,email: req.session.email,category:category,pageNum:pageNum});
             }
         });
+
 
 
     });

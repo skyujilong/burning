@@ -11,6 +11,7 @@ var Constant = require('./../common/Constant');
 var CategoryService = require('./CategoryService');
 var UserService = require('./UserService');
 var BoardService = require('./BoardService');
+var PostService = require('./PostService');
 module.exports = function (app) {
 
     logger.info('init service.................................');
@@ -29,7 +30,8 @@ module.exports = function (app) {
     }
 
     if (!ServiceFactory[Constant.SERVICE_POST]) {
-
+        PostService.init(daoFactory);
+        ServiceFactory[Constant.SERVICE_POST] = PostService;
     }
 
     if (!ServiceFactory[Constant.SERVICE_USER]) {

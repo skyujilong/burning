@@ -70,5 +70,13 @@ module.exports = function(){
             });
     };
 
+    BoardDaoImpl.prototype.getAllCategoryAndBoardById = function(db,categoryId,boardId,callback){
+        var tThis = this;
+        db.collection(tThis.collectionName.CATEGORY).findOne({_id:tThis.getObjectId(categoryId),
+            'boards._id' : tThis.getObjectId(boardId)},function(err,category){
+            callback(err,db,category);
+        });
+    };
+
     return BoardDaoImpl;
 };

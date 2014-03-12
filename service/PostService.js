@@ -5,171 +5,170 @@
  * Time: 下午4:31
  * To change this template use File | Settings | File Templates.
  */
-var DBUtil = require('./../common/dbUtil').dbUtil;
 var logger = require('./../common/log').getLogger();
+var Constant = require('./../common/Constant');
+var async = require('async');
 var PostService = {
 
-    getPostList : function(appId,categoryId,boardId,pageNum,pageSize,fn){
+    daoFactory: null,
+    init: function (daoFactory) {
+        this.daoFactory = daoFactory;
+    },
 
-        DBUtil.getDBConnection('post',function(err, collection, closeCallBack){
-            if(err){
-                fn(err);
-                closeCallBack();
-                return;
+    getPostList: function (categoryId, boardId, pageNum, pageSize, fn) {
+
+        var postDao = this.daoFactory[Constant.DAO_POST];
+        var boardDao = this.daoFactory[Constant.DAO_BOARD];
+        var postlist = null;
+        async.waterfall([
+            function (callback) {
+                postDao.open(callback);
+            },
+            function (db, callback) {
+                postDao.getPostList(db, categoryId, boardId, (pageNum - 1) * pageSize, pageSize, callback);
+            },
+            function(db,list,callback){
+                postlist = list;
+                boardDao.getAllCategoryAndBoardById(db,categoryId,boardId,callback);
+            },
+            function(db,category,callback){
+                boardDao.close(db);
+                callback(null,postlist,category);
             }
-            collection.find({'appId':DBUtil.getObjectId(appId),'categoryId':DBUtil.getObjectId(categoryId),'boardId':DBUtil.getObjectId(boardId)}).count(function(err,count){
-                if(err){
-                    fn(err);
-                    closeCallBack();
-                    return;
-                }
-                var cursor = collection.find({'appId':DBUtil.getObjectId(appId),'categoryId':DBUtil.getObjectId(categoryId),'boardId':DBUtil.getObjectId(boardId)},{sort:{'createTime':-1,'lastUpdateTime':-1}});
-                cursor.limit(pageSize).skip((pageNum - 1)*pageSize);
-                cursor.toArray(function(err,docs){
-                    for(var i = 0, len = docs.length; i < len ; i ++ ){
-                        if(docs[i].urlPromotion){
-                            docs[i].urlPromotion = decodeURI(docs[i].urlPromotion);
-                        }
-                    }
-                    docs.pageCount = Math.ceil(count/pageSize);
-                    fn(err,docs);
-                    closeCallBack();
-                });
-            });
+        ], fn);
 
-        },false);
 
     },
 
-    createPost : function (post,fn){
+    createPost: function (post, fn) {
 
-        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
-            if(err){
-                fn(err);
-                closeCallBack();
-                return;
+        var postDao = this.daoFactory[Constant.DAO_POST];
+        async.waterfall([
+            function(callback){
+                postDao.open(callback);
+            },
+            function(db,callback){
+                postDao.savePost(db,post,callback);
+            },
+            function(db,doc,callback){
+                postDao.close(db);
+                callback(null,doc);
             }
-            collection.insert(post,{safe:true},function(err,doc){
-                fn(err,doc);
-                closeCallBack();
-            })
-        });
+        ],fn);
+
 
     },
 
-    delPostById : function (_id, fn){
-        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
-            if(err){
-                fn(err);
-                closeCallBack();
-                return;
+    delPostById: function (_id, fn) {
+        var postDao = this.daoFactory[Constant.DAO_POST];
+        async.waterfall([
+            function(callback){
+                postDao.open(callback);
+            },
+            function(db,callback){
+                postDao.delPostById(db,_id,callback);
+            },
+            function(db,count,callback){
+                postDao.close(db);
+                callback(null,count);
             }
-            collection.remove({_id : DBUtil.getObjectId(_id)},{w:1},function(err,doc){
-                fn(err,doc);
-                closeCallBack();
-            });
-        });
+        ],fn);
     },
 
-    getPostById: function(_id,fn){
-        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
-            if(err){
-                fn(err);
-                closeCallBack();
-                return;
+    getPostById: function (_id, fn) {
+
+        var postDao = this.daoFactory[Constant.DAO_POST];
+        async.waterfall([
+            function(callback){
+                postDao.open(callback);
+            },
+            function(db,callback){
+                postDao.getPostById(db,_id,callback);
+            },
+            function(db,post,callback){
+                postDao.close(db);
+                callback(null,post);
             }
-            collection.findOne({_id:DBUtil.getObjectId(_id)},function(err,doc){
-                fn(err,doc);
-                closeCallBack();
-            });
-        });
+        ],fn);
+
     },
 
-    updatePostById : function(_id,url,fn){
-        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
-            if(err){
-                fn(err);
-                closeCallBack();
-                return;
+    updatePostById: function (_id, url, fn) {
+        var postDao = this.daoFactory[Constant.DAO_POST];
+        async.waterfall([
+            function(callback){
+                postDao.open(callback);
+            },
+            function(db,callback){
+                postDao.updatePostById(db,_id,url,callback);
+            },
+            function(db,doc,callback){
+                postDao.close(db);
+                callback(null,doc);
             }
-            var updateTime = new Date().getTime();
-            collection.update({_id:DBUtil.getObjectId(_id)},{
-                $set:{
-                    urlPromotion : url,
-                    lastUpdateTime : updateTime
-                }
-            },{w:1},function(err){
-                fn(err);
-                closeCallBack();
-            });
-        });
+        ],fn);
     },
 
-    updatePostStatusById : function(_id,status,fn){
-        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
-            if(err){
-                fn(err);
-                closeCallBack();
-                return;
+    updatePostStatusById: function (_id, status, fn) {
+        var postDao = this.daoFactory[Constant.DAO_POST];
+        async.waterfall([
+            function(callback){
+                postDao.open(callback);
+            },
+            function(db,callback){
+                postDao.updatePostStatusById(db,_id,status,callback);
+            },
+            function(db,doc,callback){
+                postDao.close(db);
+                callback(null,doc);
             }
-            var updateTime = new Date().getTime();
-            collection.update({_id:DBUtil.getObjectId(_id)},{
-                $set:{
-                    lastUpdateTime : updateTime,
-                    status:status
-                }
-            },{w:1},function(err,doc){
-                fn(err,doc);
-                closeCallBack();
-            })
-        });
+        ],fn);
     },
 
-    multUpdatePostStatus : function(ids,status,fn){
-        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
-            if(err){
-                fn(err);
-                closeCallBack();
-                return;
+    multUpdatePostStatus: function (ids, status, fn) {
+        var postDao = this.daoFactory[Constant.DAO_POST];
+        var _ids = getObjectIds(ids);
+        async.waterfall([
+            function(callback){
+                postDao.open(callback);
+            },
+            function(db,callback){
+                postDao.multiUpdatePostStatus(db,_ids,status,callback);
+            },
+            function(db,doc,callback){
+                postDao.close(db);
+                _ids = null;
+                callback(null,doc);
             }
-            var updateTime = new Date().getTime();
-            var _ids = getObjectIds(ids);
-            collection.update({_id:{$in:_ids}},{$set:{
-                lastUpdateTime:updateTime,
-                status:status
-            }},{multi:true},function(err,doc){
-                fn(err,doc);
-                closeCallBack();
-            });
-        });
+        ],fn);
     },
 
-    multDelPost : function(ids,fn){
-        DBUtil.getDBConnection('post',function(err,collection,closeCallBack){
-            if(err){
-                fn(err);
-                closeCallBack();
-                return;
+    multDelPost: function (ids, fn) {
+
+        var postDao = this.daoFactory[Constant.DAO_POST];
+        var _ids = getObjectIds(ids);
+        async.waterfall([
+            function(callback){
+                postDao.open(callback);
+            },
+            function(db,callback){
+                postDao.multDelPost(db,ids,callback);
+            },
+            function(db,count,callback){
+                postDao.close(db);
+                _ids = null;
+                callback(null,count);
             }
-            var _ids = getObjectIds(ids);
-            collection.remove({_id : {$in : _ids}},{safe:true,multi:true},function(err,count){
-                fn(err,count);
-                closeCallBack();
-            });
-        });
+        ],fn);
     }
 };
-function getObjectIds(ids){
+function getObjectIds(ids) {
     var _ids = new Array(ids.length);
-    for(var i = 0, len = ids.length; i < len; i++){
+    for (var i = 0, len = ids.length; i < len; i++) {
         _ids.push(DBUtil.getObjectId(ids[i]));
     }
     return _ids;
 }
 
 
-
-
-
-
-exports.service = PostService;
+module.exports = PostService;
