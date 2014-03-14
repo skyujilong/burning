@@ -6,14 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
-    var Post = function (_id, appId, categoryId, boardId, title,  createTime, urlPromotion, lastUpdateTime , fontCoverPic , status) {
+    var Post = function (_id, categoryId, boardId, title,  createTime, taobaoUrl, lastUpdateTime , fontCoverPic , status) {
         this._id = _id;
-        this.appId = appId;
         this.categoryId = categoryId;
         this.boardId = boardId;
         this.title = title;
         this.createTime = createTime;
-        this.urlPromotion = urlPromotion;
+        this.taobaoUrl = taobaoUrl;
         this.lastUpdateTime = lastUpdateTime;
         this.postContents = [];
         this.fontCoverPic = fontCoverPic;
@@ -32,9 +31,9 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
         },
         save : function(){
             var title = $('#createBox').find('input[name="postTitle"]').val();
-            var url = encodeURI($('#createBox').find('input[name="urlPromotion"]').val());
+            var url = encodeURI($('#createBox').find('input[name="taobaoUrl"]').val());
             this.title = title;
-            this.urlPromotion = url;
+            this.taobaoUrl = url;
 
         },
         pullContents : function(_id){
@@ -70,11 +69,10 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
                     util.sendAjax('/burning/cms/createPost',{
                         post :
                             {
-                                appId : tThis.appId,
                                 categoryId : tThis.categoryId,
                                 boardId : tThis.boardId,
                                 title : tThis.title,
-                                urlPromotion : tThis.urlPromotion,
+                                taobaoUrl : tThis.taobaoUrl,
                                 postContents : tThis.postContents,
                                 status : tThis.status
                             }
@@ -92,7 +90,7 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
         },
         initVals : function(){
             this.title = $('#createBox').find('input[name="postTitle"]').val();
-            this.urlPromotion = encodeURI($('#createBox').find('input[name="urlPromotion"]').val());
+            this.taobaoUrl = encodeURI($('#createBox').find('input[name="taobaoUrl"]').val());
             this.status = $('#createBox').find('select[name="status"]').val();
             for(var i = 0 , len = this.postContents.length; i<len; i++){
                 if(this.postContents[i].type == 1){
@@ -161,7 +159,7 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
             var tThis = this;
             util.sendAjax('/burning/cms/updatePostById',{
                 _id: tThis._id,
-                urlPromotion : tThis.urlPromotion
+                taobaoUrl : tThis.taobaoUrl
             },'json',fn,'put');
         },
         updatePostStatus : function(fn){

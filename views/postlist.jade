@@ -20,11 +20,11 @@ html
         div.container
             ol.breadcrumb
                 li
-                    a(href='/burning/cms/applist') #{app.appName}
+                    a(href='/burning/cms/getCategorylist') 应用
                 li
-                    a(href='/burning/cms/getCategorylist/#{app._id}') #{category.categoryName}
+                    |#{category.name}
                 li
-                    a(href='/burning/cms/getAllBoards/#{app._id}/#{category._id}') #{board.boardName}
+                    a(href='/burning/cms/getAllBoards/#{category._id}') #{board.name}
                 li.active
                     |帖子列表
 
@@ -56,8 +56,8 @@ html
 
                         div.collapse(id="#{post._id}panel")
                             div.panel-body
-                                if post.urlPromotion
-                                    a(target="_blank",href="#{post.urlPromotion}").btn.btn-sm.btn-primary 点击跳转到推广商品展示页面
+                                if post.taobaoUrl
+                                    a(target="_blank",href="#{post.taobaoUrl}").btn.btn-sm.btn-primary 点击跳转到推广商品展示页面
                                     br
                                 each content in post.postContents
                                     if (content.type == 1)
@@ -88,14 +88,14 @@ html
                         a.btn.btn-sm.btn-warning 隐藏
                         a.btn.btn-sm.btn-warning 删除
                 div.col-md-6.text-right
-                    ul#postPage.pagination(data-count="#{posts.pageCount}",data-page-num="#{pageNum}",data-url="/burning/cms/getPostlist/#{app._id}/#{category._id}/#{board._id}/$")
+                    ul#postPage.pagination(data-count="#{posts.pageCount}",data-page-num="#{pageNum}",data-url="/burning/cms/getPostlist/#{category._id}/#{board._id}/$")
 
 
 
 
 
 
-        div#createBox.fade.modal(role='dialog',aria-hidden='true',aria-labelledby="myModalLabel",data-app-id="#{app._id}",data-category-id="#{category._id}",data-board-id="#{board._id}")
+        div#createBox.fade.modal(role='dialog',aria-hidden='true',aria-labelledby="myModalLabel",data-category-id="#{category._id}",data-board-id="#{board._id}")
             div.modal-dialog
                 div.modal-content
                     div.modal-header
@@ -107,8 +107,8 @@ html
                                 label(for="postTitle") 帖子标题
                                 input(type="text",class="form-control",name="postTitle",placeholder="Enter post title")
                             div.form-group
-                                label(for="urlPromotion") 推广商品连接
-                                input.form-control(type="text",name="urlPromotion",placeholder="Enter url with 'http://....'")
+                                label(for="taobaoUrl") 推广商品连接
+                                input.form-control(type="text",name="taobaoUrl",placeholder="Enter url with 'http://....'")
                             div.form-group
                                 label(for="status") 帖子状态
                                 select.form-control(name="status")
@@ -126,7 +126,7 @@ html
 
 
 
-        div#updateBox.fade.modal(role='dialog',aria-hidden='true',aria-labelledby="myModalLabel",data-app-id="#{app._id}",data-category-id="#{category._id}",data-board-id="#{board._id}",data-post-id="")
+        div#updateBox.fade.modal(role='dialog',aria-hidden='true',aria-labelledby="myModalLabel",data-category-id="#{category._id}",data-board-id="#{board._id}",data-post-id="")
             div.modal-dialog
                 div.modal-content
                     div.modal-header
@@ -138,8 +138,8 @@ html
                                 label(for="postTitle") 帖子标题
                                 input(type="text",class="form-control",name="postTitle",placeholder="Enter post title",disabled)
                             div.form-group
-                                label(for="urlPromotion") 推广商品连接
-                                input.form-control(type="text",name="urlPromotion",placeholder="Enter url with 'http://....'")
+                                label(for="taobaoUrl") 推广商品连接
+                                input.form-control(type="text",name="taobaoUrl",placeholder="Enter url with 'http://....'")
                         //
                             div.contents
                                 label 内容

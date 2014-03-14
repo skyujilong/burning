@@ -20,14 +20,22 @@ var PostService = {
         var postDao = this.daoFactory[Constant.DAO_POST];
         var boardDao = this.daoFactory[Constant.DAO_BOARD];
         var postlist = null;
+        var _count = null;
         async.waterfall([
             function (callback) {
                 postDao.open(callback);
+            },
+            function(db,callback){
+                postDao.getPostCmsCount(db,categoryId,boardId,function(err,db,count){
+                    _count = count;
+                    callback(err,db);
+                });
             },
             function (db, callback) {
                 postDao.getPostList(db, categoryId, boardId, (pageNum - 1) * pageSize, pageSize, callback);
             },
             function(db,list,callback){
+                list.pageCount = _count;
                 postlist = list;
                 boardDao.getAllCategoryAndBoardById(db,categoryId,boardId,callback);
             },

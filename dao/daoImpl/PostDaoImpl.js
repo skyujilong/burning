@@ -73,7 +73,7 @@ module.exports = function () {
         var lastUpdateTime = new Date().getTime();
         db.collection(tThis.collectionName.POST).update({_id: tThis.getObjectId(postId)}, {
             $set: {
-                urlPromotion: url,
+                taobaoUrl: url,
                 lastUpdateTime: lastUpdateTime
             }
         }, function (err, doc) {
@@ -139,6 +139,15 @@ module.exports = function () {
             callback(err,db,docs);
         });
     };
+
+    PostDaoImpl.prototype.getPostCmsCount = function(db,categoryId,boardId,callback){
+        var tThis = this;
+        db.collection(tThis.collectionName.POST)
+            .count({categoryId: tThis.getObjectId(categoryId), boardId : tThis.getObjectId(boardId)},function(err,count){
+                callback(err,db,count);
+            });
+    };
+
 
     return PostDaoImpl;
 };

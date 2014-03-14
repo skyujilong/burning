@@ -34,11 +34,13 @@ module.exports = function (app) {
             return;
         }
         postService.getPostList(categoryId,boardId,pageNum,pageSize,function(err,list,category){
+            console.dir(category.boards);
             if(err){
                 logger.error(err);
                 res.json(500,{rs:'system error'});
             }else{
-                res.render('postlist',{posts:list,email: req.session.email,category:category,pageNum:pageNum});
+                console.dir(list);
+                res.render('postlist',{posts:list,email: req.session.email,category:category,pageNum:pageNum,board:category.boards[0]});
             }
         });
 
@@ -50,14 +52,14 @@ module.exports = function (app) {
      * 获取生成的一个id
      */
     app.post('/burning/cms/createPostContentKey',loginFilter,function(req,res){
-        var objectId =  dbUtil.getObjectId(dbUtil.getNewId());
+        var objectId =  dbUtil.getNewId();
         res.json(200,{rs:1,key:objectId});
     });
 
     app.post('/burning/cms/createPost',loginFilter,function(req,res){
         var _post = req.param('post');
         var post = new Post(
-            dbUtil.getObjectId(dbUtil.getNewId()),
+            dbUtil.getNewId(),
             dbUtil.getObjectId(_post.categoryId),
             dbUtil.getObjectId(_post.boardId),
             _post.title,
@@ -67,7 +69,7 @@ module.exports = function (app) {
             null,
             null,
             _post.status - 0,
-            _post.price - 0 );
+            (_post.price || 0) - 0 );
         for(var i = 0, len=_post.postContents.length ; i < len ; i++){
             var _content = _post.postContents[i];
             var postContent = new PostContent(dbUtil.getObjectId(_content._id),_content.info,_content.type,i);
@@ -77,14 +79,17 @@ module.exports = function (app) {
             }
             post.postContents.push(postContent);
         }
-//        postService.createPost(post,function(err,doc){
-//            if(err){
-//                logger.error(err);
-//                res.json(500,{rs:0,msg:'error'});
-//            }else{
-//                res.json(200,{rs:1});
-//            }
-//        });
+        console.dir(post);
+        postService.createPost(post,function(err,doc){
+            if(err){
+                logger.error(err);
+                res.json(500,{rs:0,msg:'error'});
+            }else{
+                res.json(200,{rs:1});
+            }
+            post = null;
+        });
+
 
     });
     app.del('/burning/cms/delPostById',loginFilter,function(req,res){
@@ -113,8 +118,8 @@ module.exports = function (app) {
 
     app.put('/burning/cms/updatePostById',loginFilter,function(req,res){
         var _id = req.param('_id');
-        var urlPromotion = req.param('urlPromotion');
-        postService.updatePostById(_id,urlPromotion,function(err){
+        var taobaoUrl = req.param('taobaoUrl');
+        postService.updatePostById(_id,taobaoUrl,function(err){
             if(err){
                 logger.error(err);
                 res.json(500,{rs:0,msg:'帖子查找发生未知错误，请查看日志！'});

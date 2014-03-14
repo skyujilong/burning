@@ -28,8 +28,8 @@ var PostService = {
                 cursor.limit(pageSize).skip((pageNum - 1)*pageSize);
                 cursor.toArray(function(err,docs){
                     for(var i = 0, len = docs.length; i < len ; i ++ ){
-                        if(docs[i].urlPromotion){
-                            docs[i].urlPromotion = decodeURI(docs[i].urlPromotion);
+                        if(docs[i].taobaoUrl){
+                            docs[i].taobaoUrl = decodeURI(docs[i].taobaoUrl);
                         }
                     }
                     docs.pageCount = Math.ceil(count/pageSize);

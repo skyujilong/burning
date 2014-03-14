@@ -73,7 +73,6 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
         init: function () {
             this.post = new Post(
                 null,
-                $('#createBox').data('app-id'),
                 $('#createBox').data('category-id'),
                 $('#createBox').data('board-id')
             );
@@ -174,10 +173,11 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
 
             });
             $('#createBox').find('.submit').click(function (e) {
-                var obj = tThis.post.submit();
-                if(obj){
-                    $("#createBox").find('.contents').append(tThis.appendErrorInfo(obj.error));
-                }
+                console.log(tThis.post);
+//                var obj = tThis.post.submit();
+//                if(obj){
+//                    $("#createBox").find('.contents').append(tThis.appendErrorInfo(obj.error));
+//                }
 
             });
         },
@@ -250,7 +250,7 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
             var $updateBox = $('#updateBox');
             $updateBox.data('post-id',post._id);
             $updateBox.find('input[name="postTitle"]').val(post.title);
-            $updateBox.find('input[name="urlPromotion"]').val(decodeURI(post.urlPromotion));
+            $updateBox.find('input[name="taobaoUrl"]').val(decodeURI(post.taobaoUrl));
             $('#updateBox').modal('toggle');
         },
         initBtnHandler:function(){
@@ -258,7 +258,7 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
             $('#updateBox').find('.submit').click(function(e){
                 var _post = new Post();
                 _post._id = tThis.post._id;
-                _post.urlPromotion = encodeURI($('#updateBox').find('input[name="urlPromotion"]').val());
+                _post.taobaoUrl = encodeURI($('#updateBox').find('input[name="taobaoUrl"]').val());
                 _post.updatePostById(function(data){
                     if(data.rs == 1){
                         $('#updateBox').modal('hide');
