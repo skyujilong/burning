@@ -15,6 +15,5 @@
         "connect-flash":"*",
         "generic-pool": "2.*.*",
         "async":"*"
-//        "connect" : "3.*"
     }
 }

@@ -83,9 +83,9 @@ var BoardService = {
                 boardDao.open(callback);
             },
             function(db,callback){
-                boardDao.updateBoard(categoryId,board,callback);
+                boardDao.updateBoard(db,categoryId,board,callback);
             },
-            function(db,doc){
+            function(db,doc,callback){
                 boardDao.close(db);
                 callback(null,doc);
             }

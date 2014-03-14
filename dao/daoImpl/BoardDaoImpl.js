@@ -51,7 +51,7 @@ module.exports = function(){
 
     BoardDaoImpl.prototype.getAllBoardByCategoryId = function(db,categoryId,callback){
         var tThis = this;
-        db.collection(tThis.collectionName.CATEGORY).find({_id:tThis.getObjectId(categoryId)},function(err,doc){
+        db.collection(tThis.collectionName.CATEGORY).findOne({_id:tThis.getObjectId(categoryId)},function(err,doc){
             callback(err,db,doc);
         });
     };

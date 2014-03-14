@@ -13,6 +13,7 @@ var App = require('./../../modules/App');
 var Post = require('./../../modules/Post');
 var PostContent = require('./../../modules/PostContent');
 var dbUtil = require('./../../common/dbUtil').dbUtil;
+var Constant = require('./../../common/Constant');
 
 module.exports = function (app) {
 

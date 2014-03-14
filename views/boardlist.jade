@@ -20,11 +20,11 @@ html
         div.container
             ol.breadcrumb
                 li
-                    a(href='/burning/cms/applist') #{appName}
+                    a(href='/burning/cms/getCategorylist') 应用
                 li
-                    a(href='/burning/cms/getCategorylist/#{appId}') #{categoryName}
+                    |#{categoryName}
                 li.active
-                    |Board Management
+                    |期刊管理
         div.container.operating
             button.btn.btn-primary.btn-sm(data-toggle='modal',data-target='#createBox') Create Board
         div.container
@@ -37,12 +37,12 @@ html
                                 img
                             div.caption
                                 h3
-                                    |板块名称：
-                                    a(href="/burning/cms/getPostList/#{appId}/#{categoryId}/#{b._id}/1")= b.boardName
+                                    |期刊名称：
+                                    a(href="/burning/cms/getPostList/#{categoryId}/#{b._id}/1")= b.name
                                 span ID：#{b._id}
                                 div.center-block.text-center
-                                    a.btn.btn-primary.btn-sm.board-update(data-target='#updateBox',data-toggle='modal',data-board-id='#{b._id}',data-app-id='#{appId}',data-category-id='#{categoryId}',data-board-name='#{b.boardName}') 编辑
-                                    a.btn.btn-warning.btn-sm.board-del(data-board-id='#{b._id}',data-app-id='#{appId}',data-category-id='#{categoryId}') 删除
+                                    a.btn.btn-primary.btn-sm.board-update(data-target='#updateBox',data-toggle='modal',data-board-id='#{b._id}',data-category-id='#{categoryId}',data-board-name='#{b.name}') 编辑
+                                    a.btn.btn-warning.btn-sm.board-del(data-board-id='#{b._id}',data-category-id='#{categoryId}') 删除
 
 
 
@@ -60,7 +60,7 @@ html
                                 label(for="boardName") Board Name
                                 input(type="text",class="form-control",name="boardName",placeholder="Enter baord name")
                             div.modal-footer
-                                button.btn-primary.btn.btn-sm.submit(data-app-id='#{appId}',data-category-id='#{categoryId}') 确定
+                                button.btn-primary.btn.btn-sm.submit(data-category-id='#{categoryId}') 确定
                                 button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消
         //
             修改box
@@ -75,7 +75,6 @@ html
                             div.form-group
                                 label(for="categoryName") Board Name
                                 input(type="text",class="form-control",name="boardName",placeholder="Enter category name")
-                                input.hidden(type='text',data-val='#{appId}',name='appId')
                                 input.hide(type='text',name='categoryId')
                                 input.hide(type='text',name='boardId')
                     div.modal-footer

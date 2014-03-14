@@ -20,9 +20,9 @@ html
         div.container
             ol.breadcrumb
                 li
-                    a(href='/burning/cms/getCategorylist') 板块列表
+                    a(href='/burning/cms/getCategorylist') 应用
                 li.active
-                    |Category Manage
+                    |菜单分类
         div.container.operating
             button.btn.btn-primary.btn-sm(data-toggle='modal',data-target='#createBox') Create Category
         div.container
@@ -35,13 +35,13 @@ html
                             div.caption
                                 h3
                                     |分类名字：
-                                    a(href="/burning/cms/getAllBoards/#{appId}/#{cate._id}")= cate.categoryName
+                                    a(href="/burning/cms/getAllBoards/#{cate._id}")= cate.name
                                 span
                                     |ID：
                                     |#{cate._id}
                                 div.center-block.text-center
-                                    a.btn.btn-primary.btn-sm.cate-update(data-target='#updateBox',data-toggle='modal',data-category-id='#{cate._id}',data-category-name='#{cate.categoryName}') 编辑
-                                    a.btn.btn-warning.btn-sm.cate-del(data-category-id='#{cate._id}',data-app-id='#{appId}') 删除
+                                    a.btn.btn-primary.btn-sm.cate-update(data-target='#updateBox',data-toggle='modal',data-category-id='#{cate._id}',data-category-name='#{cate.name}') 编辑
+                                    a.btn.btn-warning.btn-sm.cate-del(data-category-id='#{cate._id}') 删除
 
 
 
@@ -58,7 +58,6 @@ html
                             div.form-group
                                 label(for="categoryName") Category Name
                                 input(type="text",class="form-control",name="categoryName",placeholder="Enter category name")
-                                input.hidden(type='text',data-val='#{appId}',name='appId')
                     div.modal-footer
                         button.btn-primary.btn.btn-sm.submit 确定
                         button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消
@@ -75,7 +74,6 @@ html
                             div.form-group
                                 label(for="categoryName") Category Name
                                 input(type="text",class="form-control",name="categoryName",placeholder="Enter category name")
-                                input.hidden(type='text',data-val='#{appId}',name='appId')
                                 input.hide(type='text',name='categoryId')
                     div.modal-footer
                         button.btn-primary.btn.btn-sm.submit 确定

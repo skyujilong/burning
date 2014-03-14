@@ -24,13 +24,14 @@ module.exports = function(app){
                 res.json(500,{'status' : 'system err'});
                 return;
             }
-            res.render('categorylist',{categorys:list});
+            res.render('categorylist',{categorys:list,email:req.session.email});
         });
 
     });
 
     app.post('/burning/cms/createCategory',loginFilter,function(req,res){
         var category = new Category(null,req.param('name'));
+        console.dir(category);
         categoryService.createCategory(category,function(err,doc){
             if(err){
                 logger.error(err);
@@ -58,7 +59,7 @@ module.exports = function(app){
         var categoryName = req.param('name');
         var categoryId = req.param('_id');
         var category = new Category(categoryId,categoryName);
-        categoryService.updateCategory(category,function(req,res){
+        categoryService.updateCategory(category,function(err,count){
            category = null;
             if (err) {
                 logger.error(err);

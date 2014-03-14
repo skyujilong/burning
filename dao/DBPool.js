@@ -23,7 +23,7 @@ module.exports = function (app) {
         max: 100,
         min: 5,
         idleTimeoutMillis: 1000 * 60 * 10,
-        log: true
+        log: false
     });
 
 };

@@ -7,9 +7,9 @@
  */
 var DBUtil = require('./../common/dbUtil').dbUtil;
 var Constant = require('./../common/Constant');
-function Board(_id,boardName,status,imgUrl){
+function Board(_id,name,status,imgUrl){
     this._id = _id || DBUtil.getNewId();
-    this.boardName = boardName;
+    this.name = name;
     this.status = status || Constant.OFFLINE;
     this.imgUrl = imgUrl;
 

@@ -11,23 +11,20 @@ define(['jquery', 'util'], function ($, util) {
         this._id = _id;
     }
 
-    Category.prototype.createCategroy = function (appId, fn) {
+    Category.prototype.createCategroy = function ( fn) {
         util.sendAjax('/burning/cms/createCategory', {
-            name: this.name,
-            appId: appId
+            name: this.name
         }, 'json', fn, 'post');
     };
-    Category.prototype.updateCategroy = function (appId, fn) {
+    Category.prototype.updateCategroy = function (fn) {
         util.sendAjax('/burning/cms/updateCategroy', {
             _id: this._id,
-            name: this.name,
-            appId: appId
+            name: this.name
         }, 'json', fn, 'put');
     };
-    Category.prototype.delCategory = function (appId, fn) {
+    Category.prototype.delCategory = function (fn) {
         util.sendAjax('/burning/cms/delCategory', {
-            _id: this._id,
-            appId: appId
+            _id: this._id
         }, 'json', fn, 'delete');
     };
     return Category;

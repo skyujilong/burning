@@ -15,26 +15,23 @@ define(['jquery', 'util'], function ($, util) {
 
     }
 
-    Board.prototype.createBoard = function(appId,categoryId,fn){
+    Board.prototype.createBoard = function(categoryId,fn){
         util.sendAjax('/burning/cms/createBoard', {
             name: this.name,
-            appId: appId,
             categoryId:categoryId
         }, 'json', fn, 'post');
     };
 
-    Board.prototype.deleteBoard = function(appId,categoryId,fn){
+    Board.prototype.deleteBoard = function(categoryId,fn){
         util.sendAjax('/burning/cms/delBoard', {
             _id: this._id,
-            appId: appId,
             categoryId:categoryId
         }, 'json', fn, 'delete');
     };
 
-    Board.prototype.updateBoard = function(appId,categoryId,fn){
+    Board.prototype.updateBoard = function(categoryId,fn){
         util.sendAjax('/burning/cms/updateBoard', {
             _id: this._id,
-            appId: appId,
             categoryId:categoryId,
             name:this.name
         }, 'json', fn, 'put');

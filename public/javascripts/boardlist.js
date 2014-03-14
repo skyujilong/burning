@@ -14,11 +14,10 @@ define(['domReady!', 'jquery', 'util', 'boardlist/board', 'bootstrap'], function
     });
     $('#createBox').find('.submit').click(function (e) {
         var $submitBtn = $(e.target);
-        var appId = $submitBtn.data('app-id');
         var categoryId = $submitBtn.data('category-id');
         var boardName = $('#createBox').find('input[name="boardName"]').val();
         var board = new Board(null, boardName);
-        board.createBoard(appId, categoryId, function (data) {
+        board.createBoard( categoryId, function (data) {
             if (data && data.rs == 1) {
                 location.reload(true);
             } else {
@@ -28,11 +27,10 @@ define(['domReady!', 'jquery', 'util', 'boardlist/board', 'bootstrap'], function
     });
 
     $('.board-del').click(function (e) {
-        var appId = $(e.target).data('app-id');
         var categoryId = $(e.target).data('category-id');
         var boardId = $(e.target).data('board-id');
         var board = new Board(boardId);
-        board.deleteBoard(appId, categoryId, function (data) {
+        board.deleteBoard(categoryId, function (data) {
             if (data && data.rs == 1) {
                 location.reload();
             } else {
@@ -54,8 +52,7 @@ define(['domReady!', 'jquery', 'util', 'boardlist/board', 'bootstrap'], function
     $('#updateBox').find('.submit').click(function (e) {
         var $update = $('#updateBox');
         var board = new Board($update.find('input[name="boardId"]').val(), $update.find('input[name="boardName"]').val());
-        console.log(board);
-        board.updateBoard($update.find('input[name="appId"]').data('val'), $update.find('input[name="categoryId"]').val(), function (data) {
+        board.updateBoard( $update.find('input[name="categoryId"]').val(), function (data) {
             if (data && data.rs == 1) {
                 location.reload(true);
             } else {
