@@ -23,13 +23,5 @@ function PostContent(_id,info,type,sort){
     this.sort = sort;
 };
 
-
-var Constant = {
-    text : 1,
-    jpg : 2,
-    gif : 3
-};
-
-exports.Constant = Constant;
 module.exports = PostContent;
 

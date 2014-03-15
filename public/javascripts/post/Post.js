@@ -176,7 +176,9 @@ define(['jquery', 'util', 'post/PostContent'], function ($, util, PostContent) {
             var tThis = this;
             util.sendAjax('/burning/cms/updatePostById',{
                 _id: tThis._id,
-                taobaoUrl : tThis.taobaoUrl
+                taobaoUrl : tThis.taobaoUrl,
+                price : tThis.price,
+                title : tThis.title
             },'json',fn,'put');
         },
         updatePostStatus : function(fn){

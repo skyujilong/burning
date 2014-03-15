@@ -102,35 +102,19 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                     $parent.find('.progress-bar').css('width','0');
                     uploader.init('/burning/cms/uploader', e.target, function (xhr) {
                         var data = xhr.currentTarget.response;
-                        if(!data.rs){
+                        if(!data.status){
                             data = eval('(' + data + ')');
                         }
-                        if (data.rs == 1) {
-                            if (data.cover) {
-                                //gif
-                                tThis.post.updateContent(
-                                    $(e.target).data('id'),
-                                    {
-                                        path:data.path,
-                                        cover:data.cover,
-                                        lowPath:data.lowViewPath
-                                    },
-                                    3
-                                );
-                                tThis.showPic($parent,data.cover);
-                            } else {
-                                //jpg
-                                tThis.post.updateContent(
-                                    $(e.target).data('id'),
-                                    {
-                                        path:data.path,
-                                        lowPath:data.lowViewPath
-                                    },
-                                    2
-                                );
-                                tThis.showPic($parent,data.path);
-                            }
+                        if (data.status == 1) {
+                            console.log(data);
+                            tThis.post.updateContent($(e.target).data('id'),data.pics,data.pics.type);
+                            tThis.showPic($parent,data.pics.lowPic.viewUrl);
+                        }else if(data.status == 2){
+                            alert(data.msg);
+                        }else{
+                            alert('error');
                         }
+
                     },function(event){
                         //event lengthComputable loaded total
                         if(event.lengthComputable){

@@ -12,6 +12,7 @@ var CategoryService = require('./CategoryService');
 var UserService = require('./UserService');
 var BoardService = require('./BoardService');
 var PostService = require('./PostService');
+var UploadPicService = require('./UploadPicService');
 module.exports = function (app) {
 
     logger.info('init service.................................');
@@ -38,6 +39,13 @@ module.exports = function (app) {
         UserService.init(daoFactory);
         ServiceFactory[Constant.SERVICE_USER] = UserService;
     }
+
+    if(!ServiceFactory[Constant.SERVICE_UPLOAD_PIC]){
+        UploadPicService.init(app.get('ctx'),app.get('delimiter'),app.locals.appLocal);
+        ServiceFactory[Constant.SERVICE_UPLOAD_PIC] = UploadPicService;
+    }
+
+
 
     logger.info('init service complete.................................');
     return ServiceFactory;

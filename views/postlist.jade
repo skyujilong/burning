@@ -63,11 +63,8 @@ html
                                 each content in post.postContents
                                     if (content.type == 1)
                                         p.postText &nbsp;&nbsp;#{content.info.text}
-                                    if (content.type == 2)
-                                        img.postImg(width='500',src='#{content.info.path}')
-                                        br
-                                    if(content.type == 3)
-                                        img.postImg(width='500',src='#{content.info.cover}')
+                                    if (content.type == 2 || content.type == 3)
+                                        img.postImg(width='500',src='#{content.info.lowPic.viewUrl}')
                                         br
                             div.panel-footer.text-right
                                 if post.status == 1

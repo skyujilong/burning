@@ -31,7 +31,6 @@ module.exports = function(app){
 
     app.post('/burning/cms/createCategory',loginFilter,function(req,res){
         var category = new Category(null,req.param('name'));
-        console.dir(category);
         categoryService.createCategory(category,function(err,doc){
             if(err){
                 logger.error(err);

@@ -102,14 +102,14 @@ var PostService = {
 
     },
 
-    updatePostById: function (_id, url, fn) {
+    updatePostById: function (obj, fn) {
         var postDao = this.daoFactory[Constant.DAO_POST];
         async.waterfall([
             function(callback){
                 postDao.open(callback);
             },
             function(db,callback){
-                postDao.updatePostById(db,_id,url,callback);
+                postDao.updatePostById(db,obj,callback);
             },
             function(db,doc,callback){
                 postDao.close(db);

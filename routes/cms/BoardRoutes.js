@@ -22,7 +22,6 @@ module.exports = function (app) {
     app.get('/burning/cms/getAllBoards/:categoryId', loginFilter, function (req, res) {
         var categoryId = req.param('categoryId');
         boardService.getAllBoardByCategoryId(categoryId, function (err,doc) {
-            console.dir(doc);
             if (err) {
                 logger.error(err);
                 res.json(500, {rs: 'system error'});

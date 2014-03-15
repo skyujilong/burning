@@ -9,7 +9,6 @@ var util = require('./../../common/util').util;
 var logger = require('./../../common/log').getLogger();
 var loginFilter = require('./../../filter/filter').authorize;
 var postService = require('./../../service/PostService').service;
-var App = require('./../../modules/App');
 var Post = require('./../../modules/Post');
 var PostContent = require('./../../modules/PostContent');
 var dbUtil = require('./../../common/dbUtil').dbUtil;
@@ -38,7 +37,6 @@ module.exports = function (app) {
                 logger.error(err);
                 res.json(500,{rs:'system error'});
             }else{
-                console.dir(list);
                 res.render('postlist',{posts:list,email: req.session.email,category:category,pageNum:pageNum,board:category.boards[0]});
             }
         });
@@ -73,11 +71,10 @@ module.exports = function (app) {
             var _content = _post.postContents[i];
             var postContent = new PostContent(dbUtil.getObjectId(_content._id),_content.info,_content.type,i);
             if(postContent.type != 1 && !post.fontCoverPic){
-                post.fontCoverPic = postContent.info.lowPath;
+                post.fontCoverPic = postContent.info.lowPic.viewUrl;
             }
             post.postContents.push(postContent);
         }
-        console.dir(post);
         postService.createPost(post,function(err,doc){
             if(err){
                 logger.error(err);
@@ -117,7 +114,14 @@ module.exports = function (app) {
     app.put('/burning/cms/updatePostById',loginFilter,function(req,res){
         var _id = req.param('_id');
         var taobaoUrl = req.param('taobaoUrl');
-        postService.updatePostById(_id,taobaoUrl,function(err){
+        var price = req.param('price') - 0;
+        var title = req.param('title');
+        postService.updatePostById({
+            _id:_id,
+            taobaoUrl:taobaoUrl,
+            price:price,
+            title:title
+        },function(err){
             if(err){
                 logger.error(err);
                 res.json(500,{rs:0,msg:'帖子查找发生未知错误，请查看日志！'});

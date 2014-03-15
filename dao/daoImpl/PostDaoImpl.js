@@ -68,13 +68,15 @@ module.exports = function () {
     };
 
     //TODO 后续修改
-    PostDaoImpl.prototype.updatePostById = function (db, postId, url, callback) {
+    PostDaoImpl.prototype.updatePostById = function (db, post, callback) {
         var tThis = this;
         var lastUpdateTime = new Date().getTime();
-        db.collection(tThis.collectionName.POST).update({_id: tThis.getObjectId(postId)}, {
+        db.collection(tThis.collectionName.POST).update({_id: tThis.getObjectId(post._id)}, {
             $set: {
-                taobaoUrl: url,
-                lastUpdateTime: lastUpdateTime
+                taobaoUrl: post.taobaoUrl,
+                lastUpdateTime: lastUpdateTime,
+                title:post.title,
+                price:post.price
             }
         }, function (err, doc) {
             callback(err, db, doc);
