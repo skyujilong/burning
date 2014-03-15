@@ -59,6 +59,7 @@ html
                                 if post.taobaoUrl
                                     a(target="_blank",href="#{post.taobaoUrl}").btn.btn-sm.btn-primary 点击跳转到推广商品展示页面
                                     br
+                                p.postText &nbsp;&nbsp;售价：￥#{post.price}
                                 each content in post.postContents
                                     if (content.type == 1)
                                         p.postText &nbsp;&nbsp;#{content.info.text}
@@ -74,7 +75,7 @@ html
                                 else if post.status == 0
                                     button.btn.btn-sm.btn-primary.post-handler-btns.update-post-status(data-post-id='#{post._id}',data-status='1') 显示帖子
 
-                                button.btn.btn-sm.btn-primary.post-handler-btns.update-post-btn(data-post-id='#{post._id}') 更新url
+                                button.btn.btn-sm.btn-primary.post-handler-btns.update-post-btn(data-post-id='#{post._id}') 更新帖子
                                 button.btn.btn-sm.btn-warning.post-handler-btns.del-post-btn(data-post-id='#{post._id}') 删除
 
         div.container
@@ -110,6 +111,9 @@ html
                                 label(for="taobaoUrl") 推广商品连接
                                 input.form-control(type="text",name="taobaoUrl",placeholder="Enter url with 'http://....'")
                             div.form-group
+                                label(for="price") 商品价格
+                                input.form-control(type="text",name="price",placeholder="Enter number")
+                            div.form-group
                                 label(for="status") 帖子状态
                                 select.form-control(name="status")
                                     option(value="1") 显示(客户端可见)
@@ -118,7 +122,8 @@ html
                                 label 内容
 
                     div.modal-footer
-                        button.btn.btn-primary.btn-sm.add-text 添加文本
+                        // 注释掉 编写文本
+                            button.btn.btn-primary.btn-sm.add-text 添加文本
                         button.btn.btn-primary.btn-sm.add-pic 添加图片
                         button.btn-primary.btn.btn-sm.submit 确定
                         button.btn-warning.btn.btn-sm(data-dismiss="modal",aria-hidden="true") 取消
@@ -136,13 +141,16 @@ html
                         form(role="form")
                             div.form-group
                                 label(for="postTitle") 帖子标题
-                                input(type="text",class="form-control",name="postTitle",placeholder="Enter post title",disabled)
+                                input(type="text",class="form-control",name="postTitle",placeholder="Enter post title")
+                            div.form-group
+                                label(for="price") 商品价格
+                                input(type="text",class="form-control",name="price",placeholder="Enter number")
                             div.form-group
                                 label(for="taobaoUrl") 推广商品连接
                                 input.form-control(type="text",name="taobaoUrl",placeholder="Enter url with 'http://....'")
-                        //
                             div.contents
-                                label 内容
+                                //
+                                    label 内容
 
                     div.modal-footer
                         //

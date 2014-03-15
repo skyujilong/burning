@@ -15,11 +15,11 @@ var DBUtil = require('./../common/dbUtil').dbUtil;
  * @param title 帖子标题
  * @param postContents 帖子内容
  * @param createTime 创建时间戳
- * @param taobao_url 推广url
+ * @param taobaoUrl 推广url
  * @param lastUpdateTime 最后更新时间
  * @param fontCoverPic 列表封面地址
- * @param innerMainPic 帖子显示的大图地址
  * @param status 帖子 的状态 0 为隐藏， 1 为显示
+ * @param price 商品价格
  * @constructor
  */
 var Post = function(_id,categoryId,boardId,title,postContents,createTime,taobaoUrl,lastUpdateTime,fontCoverPic,status,price){

@@ -23,7 +23,6 @@ module.exports = function(app){
         var email = req.param('email'),
             password = req.param('password');
         userService.login(email,password,function(err,flag){
-            logger.info(flag);
             if(err){
                 logger.error(err);
                 res.json(500,{'rs':'0'});

@@ -8,6 +8,7 @@
 var logger = require('./../common/log').getLogger();
 var Constant = require('./../common/Constant');
 var async = require('async');
+var DBUtil = require('./../common/dbUtil').dbUtil;
 var PostService = {
 
     daoFactory: null,
@@ -35,7 +36,7 @@ var PostService = {
                 postDao.getPostList(db, categoryId, boardId, (pageNum - 1) * pageSize, pageSize, callback);
             },
             function(db,list,callback){
-                list.pageCount = _count;
+                list.pageCount = Math.ceil(_count/pageSize);
                 postlist = list;
                 boardDao.getAllCategoryAndBoardById(db,categoryId,boardId,callback);
             },
@@ -152,7 +153,6 @@ var PostService = {
     },
 
     multDelPost: function (ids, fn) {
-
         var postDao = this.daoFactory[Constant.DAO_POST];
         var _ids = getObjectIds(ids);
         async.waterfall([
@@ -160,7 +160,7 @@ var PostService = {
                 postDao.open(callback);
             },
             function(db,callback){
-                postDao.multDelPost(db,ids,callback);
+                postDao.multDelPost(db,_ids,callback);
             },
             function(db,count,callback){
                 postDao.close(db);
@@ -175,6 +175,7 @@ function getObjectIds(ids) {
     for (var i = 0, len = ids.length; i < len; i++) {
         _ids.push(DBUtil.getObjectId(ids[i]));
     }
+    ids = null;
     return _ids;
 }
 

@@ -173,11 +173,10 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
 
             });
             $('#createBox').find('.submit').click(function (e) {
-                console.log(tThis.post);
-//                var obj = tThis.post.submit();
-//                if(obj){
-//                    $("#createBox").find('.contents').append(tThis.appendErrorInfo(obj.error));
-//                }
+                var obj = tThis.post.submit();
+                if(obj){
+                    $("#createBox").find('.contents').append(tThis.appendErrorInfo(obj.error));
+                }
 
             });
         },
@@ -251,14 +250,23 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
             $updateBox.data('post-id',post._id);
             $updateBox.find('input[name="postTitle"]').val(post.title);
             $updateBox.find('input[name="taobaoUrl"]').val(decodeURI(post.taobaoUrl));
+            $updateBox.find('input[name="price"]').val(post.price);
             $('#updateBox').modal('toggle');
         },
         initBtnHandler:function(){
             var tThis = this;
             $('#updateBox').find('.submit').click(function(e){
+                var $updateBox = $('#updateBox');
                 var _post = new Post();
                 _post._id = tThis.post._id;
+                _post.title = $updateBox.find('input[name="postTitle"]').val();
+                _post.price = $updateBox.find('input[name="price"]').val();
                 _post.taobaoUrl = encodeURI($('#updateBox').find('input[name="taobaoUrl"]').val());
+                var valid = tThis.validate(_post);
+                if(!valid.flag){
+                    $updateBox.find('.contents').append(createFormHandler.appendErrorInfo(valid.msg));
+                    return;
+                }
                 _post.updatePostById(function(data){
                     if(data.rs == 1){
                         $('#updateBox').modal('hide');
@@ -268,6 +276,30 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                     }
                 });
             });
+        },
+        validate : function(post){
+            if(!post.title){
+                return {
+                    flag : false,
+                    msg : '请填写标题'
+                }
+            }
+            if(!/^http:\/\//.test(post.taobaoUrl)){
+                return {
+                    flag : false,
+                    msg : '请填写正确的URL，如:http://www.baidu.com'
+                }
+            }
+            if(!/\d+(.\d+)?/.test(post.price)){
+                return {
+                    flag: false,
+                    msg : '请输入数字'
+                }
+            }
+
+            return {
+                flag: true
+            };
         }
     };
 

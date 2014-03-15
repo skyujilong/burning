@@ -34,7 +34,6 @@ module.exports = function (app) {
             return;
         }
         postService.getPostList(categoryId,boardId,pageNum,pageSize,function(err,list,category){
-            console.dir(category.boards);
             if(err){
                 logger.error(err);
                 res.json(500,{rs:'system error'});
@@ -75,7 +74,6 @@ module.exports = function (app) {
             var postContent = new PostContent(dbUtil.getObjectId(_content._id),_content.info,_content.type,i);
             if(postContent.type != 1 && !post.fontCoverPic){
                 post.fontCoverPic = postContent.info.lowPath;
-//                post.innerMainPic = postContent.info.path;
             }
             post.postContents.push(postContent);
         }

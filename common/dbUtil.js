@@ -8,7 +8,7 @@
 
 var ObjectId = require('mongodb').ObjectID;
 var logger = require('./log').getLogger('cheese');
-var DBConnecter = {
+var DBUtil = {
     //用于比对_id的
     getObjectId : function (id){
         return  ObjectId(id);
@@ -20,4 +20,4 @@ var DBConnecter = {
     }
 
 };
-exports.dbUtil = DBConnecter;
+exports.dbUtil = DBUtil;
