@@ -32,7 +32,7 @@ define(['domReady!', 'jquery', 'util', 'boardlist/board', 'bootstrap'], function
         var board = new Board(boardId);
         board.deleteBoard(categoryId, function (data) {
             if (data && data.rs == 1) {
-                location.reload();
+                location.reload(true);
             } else {
                 alert('system error');
             }
@@ -59,5 +59,40 @@ define(['domReady!', 'jquery', 'util', 'boardlist/board', 'bootstrap'], function
                 alert('system error');
             }
         })
+    });
+
+    /**
+     * 更改category 操作
+     */
+    $('.change-category').click(function(e){
+        e.preventDefault();
+        var $target = $(e.target);
+        var from_categoryId = $target.data('from-category-id');
+        var to_categoryId = $target.data('to-category-id');
+        var boardId = $target.data('board-id');
+        var board = new Board(boardId);
+        board.changeCategory(to_categoryId,from_categoryId,function(data){
+            if(data.rs == 1){
+                location.reload(true);
+            }else{
+                alert('system error');
+            }
+        });
+    });
+    //状态变更操作
+    $('.change-status').click(function(e){
+        e.preventDefault();
+        var $target = $(e.target);
+        var categoryId = $target.data('category-id');
+        var boardId = $target.data('board-id');
+        var status = $target.data('status');
+        var board = new Board(boardId);
+        board.changeBoardStatus(categoryId,status,function(data){
+            if(data.rs == 1){
+                location.reload(true);
+            }else{
+                alert('system error');
+            }
+        });
     });
 });

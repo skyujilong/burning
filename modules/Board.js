@@ -7,12 +7,24 @@
  */
 var DBUtil = require('./../common/dbUtil').dbUtil;
 var Constant = require('./../common/Constant');
-function Board(_id,name,status,imgUrl){
+/**
+ *
+ * @param _id  boardId
+ * @param name board的名称
+ * @param status 是否是上线状态
+ * @param imgUrl 封面url
+ * @param createDate 创建日期，注意是时间戳
+ * @constructor
+ */
+function Board(_id,name,status,imgUrl,createDate){
     this._id = _id || DBUtil.getNewId();
     this.name = name;
     this.status = status || Constant.OFFLINE;
     this.imgUrl = imgUrl;
-
+    this.createDate = createDate || new Date().getTime();
+    //图片的宽度与高度
+    this.width = 0;
+    this.height = 0;
 }
 
 

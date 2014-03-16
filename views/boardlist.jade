@@ -32,21 +32,49 @@ html
                 each b in boards
                     div.col-md-4.col-sm-6
                         div.thumbnail
+                            if b.imgUrl
+                                img.board-font-pic(src="#{b.imgUrl}",width=500)
+                            else
 
-                            //
-                                img
-                            div.caption
+                            div.caption.text-center
                                 h3
                                     |期刊名称：
                                     a(href="/burning/cms/getPostList/#{categoryId}/#{b._id}/1")= b.name
                                 span ID：#{b._id}
+                                br
+                                span 创建日期： #{b.createDate}
+                                br
+                                span 当前状态：
+                                    if (b.status == 1)
+                                        |已发布(客户端可见)
+                                    else
+                                        |未发布(客户端不可见)
                                 div.center-block.text-center
                                     a.btn.btn-primary.btn-sm.board-update(data-target='#updateBox',data-toggle='modal',data-board-id='#{b._id}',data-category-id='#{categoryId}',data-board-name='#{b.name}') 编辑
                                     a.btn.btn-warning.btn-sm.board-del(data-board-id='#{b._id}',data-category-id='#{categoryId}') 删除
+                                div.center-block.text-center
+                                    div(style="margin:3px;").btn-group
+                                        button.btn.btn-sm.btn-primary.dropdown-toggle(type="button" data-toggle="dropdown")
+                                            |移动板块
+                                            span.caret
+                                        ul.dropdown-menu
+                                            each cate in categoryMenu
+                                                li
+                                                    a.change-category(href="###",data-to-category-id='#{cate._id}',data-from-category-id="#{categoryId}",data-board-id="#{b._id}") #{cate.name}
+                                    div(style="margin:3px;").btn-group
+                                        button.btn.btn-sm.btn-primary.dropdown-toggle(type="button" data-toggle="dropdown")
+                                            |更改状态
+                                            span.caret
+                                        ul.dropdown-menu
+                                            each cate in categoryMenu
+                                                li
+                                                    a.change-status(href="###",data-status='1',data-board-id="#{b._id}",data-category-id="#{categoryId}") 发布上线
+                                                li
+                                                    a.change-status(href="###",data-status='0',data-board-id="#{b._id}",data-category-id="#{categoryId}") 下线
 
 
 
-        //
+    //
                增加box
         div#createBox.modal.createBox.fade(role="dialog",aria-hidden='true',aria-labelledby="myModalLabel")
             div.modal-dialog

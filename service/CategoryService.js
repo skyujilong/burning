@@ -76,6 +76,28 @@ var CategoryService = {
                 callback(null,doc);
             }
         ],fn);
+    },
+    //获取category的 name 与对应的 id  不包括当前categoryId的
+    getCategoryListWithoutCurrentCategory : function(categoryId,fn){
+        var categoryDao = this.daoFactory[Constant.DAO_CATEGORY];
+        var menuList = [];
+        this.getAllCategory(function(err,list){
+            if(err){
+                fn(err);
+            }else{
+                for(var i = 0 ,len = list.length; i< len; i++){
+                    var obj = list[i];
+                    if(obj._id != categoryId){
+                        menuList.push({
+                            _id:obj._id,
+                            name : obj.name
+                        });
+                    }
+                }
+                fn(null,menuList);
+            }
+        });
+
     }
 };
 

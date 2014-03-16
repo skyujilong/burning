@@ -18,7 +18,7 @@ module.exports = function (app) {
 
 
     var postService = app.get(Constant.SERVICE_FACTORY)[Constant.SERVICE_POST];
-
+    var boardService = app.get(Constant.SERVICE_FACTORY)[Constant.SERVICE_BOARD];
     /**
      * 获取帖子列表
      */
@@ -72,6 +72,30 @@ module.exports = function (app) {
             var postContent = new PostContent(dbUtil.getObjectId(_content._id),_content.info,_content.type,i);
             if(postContent.type != 1 && !post.fontCoverPic){
                 post.fontCoverPic = postContent.info.lowPic.viewUrl;
+                //判断是否需要更新板块封面(如果有 就不更新，没有的时候更新)
+                boardService.isNeedChangeBoardFontImg(_post.categoryId,_post.boardId,function(err,flag){
+                    if(flag){
+                        process.nextTick(function(){
+                            var categoryId = _post.categoryId,
+                                boardId = _post.boardId,
+                                imgUrl = postContent.info.lowPic.viewUrl,
+                                width = postContent.info.lowPic.width,
+                                height = postContent.info.lowPic.height;
+                            boardService.initBoardFontImg(categoryId,boardId,imgUrl,width,height,function(err){
+                                if(err){
+                                    logger.err(err);
+                                }
+                                categoryId = null;
+                                boardId = null;
+                                imgUrl = null;
+                                width = null;
+                                height = null;
+                            });
+                        });
+                    }
+                });
+                //第一张图片作为board的封面 与帖子封面相同
+
             }
             post.postContents.push(postContent);
         }

@@ -77,6 +77,29 @@ module.exports = function(){
             callback(err,db,category);
         });
     };
+    //获取单个board
+    BoardDaoImpl.prototype.getBoardById = function(db,categoryId,boardId,callback){
+        var tThis = this;
+        db.collection(tThis.collectionName.CATEGORY).findOne({_id:tThis.getObjectId(categoryId),
+            'boards._id':tThis.getObjectId(boardId)},{'boards.$':1},function(err,category){
+            callback(err,db,category.boards[0]);
+        });
+    };
+
+    //更新封面 默认为post上传的第一张封面
+    BoardDaoImpl.prototype.updateFontImgUrl = function(db,categoryId,boardId,imgUrl,width,height,callback){
+        var tThis = this;
+        db.collection(tThis.collectionName.CATEGORY).update({_id:tThis.getObjectId(categoryId),
+            'boards._id':tThis.getObjectId(boardId)},{
+            $set:{
+                'boards.$.imgUrl' : imgUrl,
+                'boards.$.width' : width,
+                'boards.$.height' : height
+            }
+        },function(err,count){
+            callback(err,db,count);
+        });
+    };
 
     return BoardDaoImpl;
 };

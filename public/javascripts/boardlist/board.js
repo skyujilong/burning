@@ -37,6 +37,21 @@ define(['jquery', 'util'], function ($, util) {
         }, 'json', fn, 'put');
     };
 
+    Board.prototype.changeCategory = function(to_categoryId,from_categoryId,fn){
+        util.sendAjax('/burning/cms/changeBoardToOtherCategory', {
+            _id: this._id,
+            to_categoryId : to_categoryId,
+            from_categoryId:from_categoryId
+        }, 'json', fn, 'put');
+    };
+
+    Board.prototype.changeBoardStatus = function(categoryId,status,fn){
+        util.sendAjax('/burning/cms/changeBoardStatus', {
+            _id: this._id,
+            categoryId:categoryId,
+            status : status
+        }, 'json', fn, 'put');
+    };
 
     return Board;
 
