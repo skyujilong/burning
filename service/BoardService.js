@@ -100,6 +100,7 @@ var BoardService = {
     //更换Category
     changeCategory: function (to_categoryId,from_categoryId, boardId, fn) {
         var boardDao = this.daoFactory[Constant.DAO_BOARD];
+        var postDao = this.daoFactory[Constant.DAO_POST];
         async.waterfall([
             function (callback) {
                 boardDao.open(callback);
@@ -108,8 +109,10 @@ var BoardService = {
                 boardDao.getBoardById(db, from_categoryId, boardId, callback);
             },
             function (db, board, callback) {
-                console.dir(board);
                 boardDao.saveBoard(db, to_categoryId, board, callback);
+            },
+            function(db,doc,callback){
+                postDao.changePostCategory(db,to_categoryId,boardId,callback);
             },
             function (db, doc, callback) {
                 boardDao.deleteBoardById(db, from_categoryId, boardId, callback);

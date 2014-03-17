@@ -150,6 +150,17 @@ module.exports = function () {
             });
     };
 
+    PostDaoImpl.prototype.changePostCategory = function(db,to_categoryId,boardId,callback){
+        var tThis = this;
+        db.collection(tThis.collectionName.POST).update({'boardId':tThis.getObjectId(boardId)},{
+            $set:{
+                'categoryId' : tThis.getObjectId(to_categoryId)
+            }
+        },{multi:true},function(err,count){
+            callback(err,db,count);
+        });
+    };
+
 
     return PostDaoImpl;
 };
