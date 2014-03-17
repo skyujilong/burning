@@ -20,9 +20,11 @@ var DBUtil = require('./../common/dbUtil').dbUtil;
  * @param fontCoverPic 列表封面地址
  * @param status 帖子 的状态 0 为隐藏， 1 为显示
  * @param price 商品价格
+ * @param width 封面宽度
+ * @param height 封面高度
  * @constructor
  */
-var Post = function(_id,categoryId,boardId,title,postContents,createTime,taobaoUrl,lastUpdateTime,fontCoverPic,status,price){
+var Post = function(_id,categoryId,boardId,title,postContents,createTime,taobaoUrl,lastUpdateTime,fontCoverPic,status,price,width,height){
     this._id = _id || DBUtil.getNewId();
     this.categoryId = categoryId;
     this.boardId = boardId;
@@ -34,6 +36,8 @@ var Post = function(_id,categoryId,boardId,title,postContents,createTime,taobaoU
     this.fontCoverPic = fontCoverPic;
     this.status = status;
     this.price = price;
+    this.width = width || 0;
+    this.height = height || 0;
 };
 
 

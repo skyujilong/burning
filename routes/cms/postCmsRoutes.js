@@ -72,6 +72,8 @@ module.exports = function (app) {
             var postContent = new PostContent(dbUtil.getObjectId(_content._id),_content.info,_content.type,i);
             if(postContent.type != 1 && !post.fontCoverPic){
                 post.fontCoverPic = postContent.info.lowPic.viewUrl;
+                post.width = postContent.info.lowPic.width;
+                post.height = postContent.info.lowPic.height;
                 //判断是否需要更新板块封面(如果有 就不更新，没有的时候更新)
                 boardService.isNeedChangeBoardFontImg(_post.categoryId,_post.boardId,function(err,flag){
                     if(flag){

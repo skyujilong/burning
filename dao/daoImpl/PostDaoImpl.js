@@ -188,5 +188,19 @@ module.exports = function () {
             });
     };
 
+    PostDaoImpl.prototype.getAllPostByBoardIds = function (db, categoryId, boardId, status, callback) {
+        if (typeof boardId !== 'object') {
+            boardId = this.getObjectId(boardId);
+        }
+        var tThis = this;
+        db.collection(tThis.collectionName.POST).find({
+            categoryId: tThis.getObjectId(categoryId),
+            boardId: boardId,
+            status: status
+        }).toArray(function (err, list) {
+            callback(err,db,list);
+            });
+    };
+
     return PostDaoImpl;
 };

@@ -106,8 +106,9 @@ define(['domReady!', 'jquery', 'util', 'post/Post', 'xhrUploader', 'pageHandler'
                             data = eval('(' + data + ')');
                         }
                         if (data.status == 1) {
-                            console.log(data);
-                            tThis.post.updateContent($(e.target).data('id'),data.pics,data.pics.type);
+                            var type = data.pics.type;
+                            delete data.pics.type;
+                            tThis.post.updateContent($(e.target).data('id'),data.pics,type);
                             tThis.showPic($parent,data.pics.lowPic.viewUrl);
                         }else if(data.status == 2){
                             alert(data.msg);
