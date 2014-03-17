@@ -12,6 +12,7 @@ var CategoryService = require('./CategoryService');
 var UserService = require('./UserService');
 var BoardService = require('./BoardService');
 var PostService = require('./PostService');
+var SdkPostService = require('./PostSdkService');
 var UploadPicService = require('./UploadPicService');
 module.exports = function (app) {
 
@@ -34,6 +35,12 @@ module.exports = function (app) {
         PostService.init(daoFactory);
         ServiceFactory[Constant.SERVICE_POST] = PostService;
     }
+
+    if(!ServiceFactory[Constant.SERVICE_SDK_POST]){
+        SdkPostService.init(daoFactory);
+        ServiceFactory[Constant.SERVICE_SDK_POST] = SdkPostService;
+    }
+
 
     if (!ServiceFactory[Constant.SERVICE_USER]) {
         UserService.init(daoFactory);

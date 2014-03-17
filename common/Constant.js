@@ -29,7 +29,8 @@ module.exports = {
     SERVICE_CATEGORY:'categoryService',
     SERVICE_POST:'postService',
     SERVICE_USER:'userService',
-    SERVICE_UPLOAD_PIC:'uploadPicService'
+    SERVICE_UPLOAD_PIC:'uploadPicService',
+    SERVICE_SDK_POST:'sdkPostService'
 };
 
 

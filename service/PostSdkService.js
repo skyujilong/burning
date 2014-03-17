@@ -6,46 +6,58 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var DBUtil = require('./../common/dbUtil').dbUtil;
 var logger = require('./../common/log').getLogger();
-var PostService = {
+var Constant = require('./../common/Constant');
+var async = require('async');
+module.exports = {
 
-    getPostList : function(appId,categoryId,boardId,pageNum,pageSize,fn){
+    daoFactory : null,
+    init : function(daoFactory){
+        this.daoFactory = daoFactory;
+    },
+    getCurrentBoardPosts : function(categoryId,pageNum,pageSize,fn){
+        var tThis = this;
+        var postDao = this.daoFactory[Constant.DAO_POST];
+        async.waterfall([
 
-        DBUtil.getDBConnection('post',function(err, collection, closeCallBack){
-            if(err){
-                fn(err);
-                closeCallBack();
-                return;
+            function(callback){
+                postDao.open(callback);
+            },
+            function(db,callback){
+                tThis.getOnlineBoard(db,categoryId,callback);
+            },function(db,boardList,callback){
+                postDao.getPostByBoardIds(db,categoryId,tThis.getBoardIds(boardList),Constant.POST_STATUS_ON,pageNum,pageSize,callback);
+            },function(db,list,hasNext,callback){
+                postDao.close(db);
+                callback(null,hasNext,list);
             }
-            collection.find({'appId':DBUtil.getObjectId(appId),'categoryId':DBUtil.getObjectId(categoryId),'boardId':DBUtil.getObjectId(boardId),'status' : 1}).count(function(err,count){
-                if(err){
-                    fn(err);
-                    closeCallBack();
-                    return;
-                }
-                var cursor = collection.find({'appId':DBUtil.getObjectId(appId),'categoryId':DBUtil.getObjectId(categoryId),'boardId':DBUtil.getObjectId(boardId),'status' : 1},{sort:{'createTime':-1,'lastUpdateTime':-1}});
-                cursor.limit(pageSize).skip((pageNum - 1)*pageSize);
-                cursor.toArray(function(err,docs){
-                    for(var i = 0, len = docs.length; i < len ; i ++ ){
-                        if(docs[i].taobaoUrl){
-                            docs[i].taobaoUrl = decodeURI(docs[i].taobaoUrl);
-                        }
-                    }
-                    docs.pageCount = Math.ceil(count/pageSize);
-                    fn(err,docs);
-                    closeCallBack();
-                });
-            });
+        ],fn);
+    },
+    getOnlineBoard : function(db,categoryId,callback){
+        var boardDao = this.daoFactory[Constant.DAO_BOARD];
+        boardDao.getBoardListByCategoryIdAndStatus(db,categoryId,Constant.ONLINE,callback);
+    },
+    getBoardIds : function(boardList){
+        var boardIds = [];
+        Array.prototype.forEach.call(boardList,function(obj){
+            boardIds.push(obj._id);
+        });
+        return boardIds;
+    },
+    changePostForSdk : function(list){
 
-        },false);
+        Array.prototype.forEach.call(list,function(obj){
+            delete obj.createTime;
+            delete obj.status;
+            delete obj.lastUpdateTime;
+            var postContents = obj.postContents;
+            delete obj.postContents;
+            obj.images = [];
+            //TODO 将postContents 转化为 images;
+        });
 
     }
+
+
 };
 
-
-
-
-
-
-exports.service = PostService;

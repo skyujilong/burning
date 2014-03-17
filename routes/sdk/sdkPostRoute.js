@@ -7,33 +7,31 @@
  */
 var util = require('./../../common/util').util;
 var logger = require('./../../common/log').getLogger();
-var Post = require('./../../modules/Post');
-var PostContent = require('./../../modules/PostContent');
-var postService = require('./../../service/PostSdkService').service;
+var Constant = require('./../../common/Constant');
 module.exports = function (app) {
 
+    var postSdkService = app.get(Constant.SERVICE_FACTORY)[Constant.SERVICE_SDK_POST];
 
-    app.get('/burning/sdk/getPostList', function (req, res) {
-
-        var appId = req.param('appId');
+    app.get('/burning/sdk/getCurrentBoardPosts', function (req, res) {
         var categoryId = req.param('categoryId');
-        var boardId = req.param('boardId');
-        var pageNum = req.param('pageNum');
-        var pageSize = req.param('pageSize') - 0 || 10;
-        if (!util.valiNum(pageNum)) {
-            res.json(200, {status: 0, msg: 'error param'});
-            return;
-        }
-        postService.getPostList(appId, categoryId, boardId, pageNum, pageSize, function (err, docs) {
+        var pageNum = req.param('pageNum') - 0;
+        var pageSize = req.param('pageSize') - 0 || 20;
+        postSdkService.getCurrentBoardPosts(categoryId, pageNum, pageSize, function (err, hasNext, list) {
             if (err) {
                 logger.error(err);
-                res.json(200, {status: 0, msg: 'system error'});
+                res.json(200, {
+                    status: 'error'
+                });
             } else {
-                res.json(200, {status: 1, postlist: docs});
+                res.json(200, {
+                    status: 'ok',
+                    data: list,
+                    hasNext: hasNext
+                });
             }
         });
-
     });
+
 
 
 };

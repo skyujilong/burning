@@ -101,5 +101,14 @@ module.exports = function(){
         });
     };
 
+    //根据categoryId获取对应的 状态的  boardList
+    BoardDaoImpl.prototype.getBoardListByCategoryIdAndStatus = function(db, categoryId, status, callback){
+        var tThis = this;
+        db.collection(tThis.collectionName.CATEGORY).findOne({_id:tThis.getObjectId(categoryId),'boards.status':status},
+            {'_id':0,'boards':1},function(err,doc){
+                callback(err,db,doc == null ? [] : doc.boards);
+            });
+    };
+
     return BoardDaoImpl;
 };
