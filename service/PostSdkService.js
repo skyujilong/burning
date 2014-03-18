@@ -100,18 +100,22 @@ module.exports = {
             },
             function(db, boardList, callback){
                 var boardId = null;
+                var board = null;
                 var list = Array.prototype.sort.call(boardList,function(a,b){
                     return b.createDate - a.createDate ;
                 });
                 if(list[index] != null){
+                    board = list[index];
                     boardId = list[index]._id;
                 }
-                postDao.getAllPostByBoardIds(db,categoryId,boardId,Constant.POST_STATUS_ON,callback);
+                postDao.getAllPostByBoardIds(db,categoryId,boardId,Constant.POST_STATUS_ON,function(err,db,list){
+                    callback(err,db,list,board);
+                });
             },
-            function(db,list,callback){
+            function(db,list,board,callback){
                 postDao.close(db);
                 tThis.changePostFontListForSdk(list);
-                callback(null,list);
+                callback(null,list,board);
             }
         ],fn);
     },
@@ -127,6 +131,5 @@ module.exports = {
             delete obj.price;
         });
     }
-
 };
 

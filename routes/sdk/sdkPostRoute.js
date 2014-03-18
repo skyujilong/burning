@@ -50,7 +50,7 @@ module.exports = function (app) {
         var categoryId = req.param('categoryId');
         //当前的 pageNum代表一个期刊
         var index = req.param('index') - 1;
-        postSdkService.getPostListFontImgByCategoryId(categoryId, index, function (err, list) {
+        postSdkService.getPostListFontImgByCategoryId(categoryId, index, function (err, list, board) {
             var hasNext = false;
             if (err) {
                 logger.error(err);
@@ -63,7 +63,10 @@ module.exports = function (app) {
                 }
                 res.json(200, {
                     status: 'ok',
-                    data: list,
+                    data: {
+                        postList:list,
+                        boardName:board.name
+                    },
                     hasNext: hasNext
                 })
             }
