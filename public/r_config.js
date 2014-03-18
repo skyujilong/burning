@@ -13,15 +13,6 @@
             ]
         },
         {
-            name: 'applist',
-            exclude: [
-                "jquery",
-                'domReady',
-                'bootstrap',
-                'util'
-            ]
-        },
-        {
             name: 'boardlist',
             exclude: [
                 "jquery",
