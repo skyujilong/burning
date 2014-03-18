@@ -15,7 +15,7 @@ module.exports = {
     init: function (daoFactory) {
         this.daoFactory = daoFactory;
     },
-    getCurrentBoardPosts: function (categoryId, pageNum, pageSize, fn) {
+    getCurrentBoardPosts: function (categoryId, fn) {
         var tThis = this;
         var postDao = this.daoFactory[Constant.DAO_POST];
         async.waterfall([
@@ -25,14 +25,33 @@ module.exports = {
             function (db, callback) {
                 tThis.getOnlineBoard(db, categoryId, callback);
             }, function (db, boardList, callback) {
-                postDao.getPostByBoardIds(db, categoryId, tThis.getBoardIds(boardList), Constant.POST_STATUS_ON, pageNum, pageSize, callback);
-            }, function (db, list, hasNext, callback) {
+                postDao.getPostByBoardIds(db, categoryId, tThis.getBoardIds(boardList), Constant.POST_STATUS_ON, callback);
+            }, function (db, list, callback) {
                 postDao.close(db);
                 tThis.changePostDetailListForSdk(list);
-                callback(null, hasNext, list);
+                callback(null, list);
             }
         ], fn);
     },
+
+    getPostListByBoardId : function(categoryId,boardId,fn){
+        var tThis = this;
+        var postDao = this.daoFactory[Constant.DAO_POST];
+        async.waterfall([
+            function(callback){
+                postDao.open(callback);
+            },
+            function(db,callback){
+                postDao.getPostListByBoardId(db,categoryId,boardId, Constant.POST_STATUS_ON,callback);
+            },
+            function(db,list,callback){
+                postDao.close(db);
+                tThis.changePostDetailListForSdk(list);
+                callback(null, list);
+            }
+        ],fn);
+    },
+
     getOnlineBoard: function (db, categoryId, callback) {
         var boardDao = this.daoFactory[Constant.DAO_BOARD];
         boardDao.getBoardListByCategoryIdAndStatus(db, categoryId, Constant.ONLINE, callback);

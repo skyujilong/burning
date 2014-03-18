@@ -166,11 +166,9 @@ module.exports = function () {
      * @param categoryId
      * @param boardIds boardId的集合
      * @param status 帖子状态
-     * @param pageNum  页数
-     * @param pageSize 一页的大小
      * @param callback 回调函数
      */
-    PostDaoImpl.prototype.getPostByBoardIds = function (db, categoryId, boardIds, status, pageNum, pageSize, callback) {
+    PostDaoImpl.prototype.getPostByBoardIds = function (db, categoryId, boardIds, status, callback) {
         var tThis = this;
         db.collection(tThis.collectionName.POST).find({
             categoryId: tThis.getObjectId(categoryId),
@@ -178,13 +176,17 @@ module.exports = function () {
                 $in: boardIds
             },
             status: status
-        }).skip((pageNum - 1) * pageNum).limit(pageNum + 1).toArray(function (err, list) {
-                if (list || list.length > pageNum) {
-                    callback(err, db, list, false);
-                } else {
-                    list.pop();
-                    callback(err, db, list, true);
-                }
+        }).toArray(function (err, list) {
+                callback(err, db, list);
+            });
+    };
+
+    PostDaoImpl.prototype.getPostListByBoardId = function (db, categoryId, boardId, status,callback) {
+        var tThis = this;
+        db.collection(tThis.collectionName.POST)
+            .find({categoryId: tThis.getObjectId(categoryId), boardId: tThis.getObjectId(boardId)})
+            .sort({lastUpdateTime: -1, createTime: -1}).toArray(function (err, list) {
+                callback(err, db, list);
             });
     };
 
@@ -198,7 +200,7 @@ module.exports = function () {
             boardId: boardId,
             status: status
         }).toArray(function (err, list) {
-            callback(err,db,list);
+                callback(err, db, list);
             });
     };
 
