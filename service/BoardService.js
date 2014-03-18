@@ -30,11 +30,13 @@ var BoardService = {
             },
             function (db, doc, callback) {
                 boardDao.close(db);
-                var boards = doc.boards;
-                //日期格式化
-                for (var i = 0, len = boards.length; i < len; i++) {
-                    var obj = boards[i];
-                    obj.createDate = util.dateFormat(new Date(obj.createDate),'yyyy-MM-dd hh:mm:ss');
+                if(doc.boards){
+                    var boards = doc.boards;
+                    //日期格式化
+                    for (var i = 0, len = boards.length; i < len; i++) {
+                        var obj = boards[i];
+                        obj.createDate = util.dateFormat(new Date(obj.createDate),'yyyy-MM-dd hh:mm:ss');
+                    }
                 }
                 callback(null, doc);
             }
