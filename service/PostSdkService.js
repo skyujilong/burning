@@ -125,8 +125,6 @@ module.exports = {
             delete obj.postContents;
             delete obj.taobaoUrl;
             delete obj.price;
-            delete obj.categoryId;
-            delete obj.boardId;
         });
     }
 

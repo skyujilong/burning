@@ -20,11 +20,11 @@ module.exports = function (app) {
                 if (err) {
                     logger.error(err);
                     res.json(200, {
-                        status: 'error'
+                        status: '500'
                     });
                 } else {
                     res.json(200, {
-                        status: 'ok',
+                        status: '200',
                         data: list
                     });
                 }
@@ -34,11 +34,11 @@ module.exports = function (app) {
                 if (err) {
                     logger.error(err);
                     res.json(200, {
-                        status: 'error'
+                        status: '500'
                     });
                 } else {
                     res.json(200, {
-                        status: 'ok',
+                        status: '200',
                         data: list
                     });
                 }
