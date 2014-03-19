@@ -72,6 +72,7 @@ module.exports = {
             delete obj.fontCoverPic;
             var postContents = obj.postContents;
             delete obj.postContents;
+            obj.taobaoUrl = decodeURI(obj.taobaoUrl);
             obj.images = [];
             for (var i = 0, len = postContents.length; i < len; i++) {
                 var pic = postContents[i];

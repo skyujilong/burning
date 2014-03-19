@@ -15,7 +15,7 @@ module.exports = function (app) {
     app.get('/burning/sdk/getPostListDetail', function (req, res) {
         var categoryId = req.param('categoryId');
         var boardId = req.param('boardId');
-        if (boardId == null) {
+        if (!boardId) {
             postSdkService.getCurrentBoardPosts(categoryId, function (err, list) {
                 if (err) {
                     logger.error(err);
@@ -55,14 +55,14 @@ module.exports = function (app) {
             if (err) {
                 logger.error(err);
                 res.json(200, {
-                    status: 'error'
+                    status: '500'
                 });
             } else {
                 if (list && list.length > 0) {
                     hasNext = true;
                 }
                 res.json(200, {
-                    status: 'ok',
+                    status: '200',
                     data: {
                         postList:list,
                         boardName:board.name
