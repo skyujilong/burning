@@ -65,7 +65,7 @@ module.exports = function (app) {
                     status: '200',
                     data: {
                         postList:list,
-                        boardName:board.name
+                        boardName:board?board.name : ''
                     },
                     hasNext: hasNext
                 })
